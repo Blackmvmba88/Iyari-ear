@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matrix Rain</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="controls">
+        <label for="color-picker">Color:</label>
+        <input type="color" id="color-picker" value="#00ff00">
+
+        <label for="rainbow-mode">Rainbow Mode:</label>
+        <input type="checkbox" id="rainbow-mode">
+
+        <label for="font-size">Font Size:</label>
+        <input type="range" id="font-size" min="8" max="24" value="16">
+
+        <label for="speed">Speed:</label>
+        <input type="range" id="speed" min="10" max="100" value="30">
+
+        <fieldset>
+            <legend>Character Set</legend>
+            <label><input type="radio" name="char-set" value="katakana" checked> Katakana</label>
+            <label><input type="radio" name="char-set" value="latin"> Latin</label>
+            <label><input type="radio" name="char-set" value="mix"> Mix</label>
+        </fieldset>
+    </div>
+    <canvas id="matrix-canvas"></canvas>
+    <script src="matrix.js"></script>
+</body>
+</html>
