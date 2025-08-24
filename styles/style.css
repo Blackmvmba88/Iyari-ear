@@ -1,0 +1,313 @@
+/* Reset y configuración base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    overflow: hidden;
+    background-color: #000;
+    color: #00ff00;
+    font-family: 'Courier New', 'Monaco', monospace;
+    position: relative;
+}
+
+/* Canvas principal */
+canvas {
+    display: block;
+    width: 100vw;
+    height: 100vh;
+    background: #000;
+}
+
+/* Panel de controles */
+#controls-panel {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(10px);
+    border: 2px solid #00ff00;
+    border-radius: 12px;
+    padding: 20px;
+    min-width: 280px;
+    max-width: 320px;
+    z-index: 1000;
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+    transition: all 0.3s ease;
+}
+
+#controls-panel.hidden {
+    transform: translateX(-100%);
+    opacity: 0;
+}
+
+#controls-panel h3 {
+    color: #00ff00;
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 16px;
+    text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+    border-bottom: 1px solid #00ff00;
+    padding-bottom: 10px;
+}
+
+/* Grupos de controles */
+.control-group {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.control-group label {
+    color: #00ff00;
+    font-size: 12px;
+    font-weight: bold;
+    text-shadow: 0 0 5px rgba(0, 255, 0, 0.3);
+}
+
+/* Inputs de color */
+#color-picker {
+    width: 50px;
+    height: 30px;
+    border: 2px solid #00ff00;
+    border-radius: 5px;
+    background: transparent;
+    cursor: pointer;
+}
+
+.color-preview {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 1px solid #00ff00;
+    border-radius: 3px;
+    margin-left: 10px;
+    background: #00ff00;
+}
+
+/* Checkboxes */
+input[type="checkbox"] {
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid #00ff00;
+    border-radius: 3px;
+    background: transparent;
+    margin-right: 8px;
+    cursor: pointer;
+    position: relative;
+    vertical-align: middle;
+}
+
+input[type="checkbox"]:checked {
+    background: #00ff00;
+}
+
+input[type="checkbox"]:checked::after {
+    content: '✓';
+    color: #000;
+    font-weight: bold;
+    position: absolute;
+    top: -2px;
+    left: 2px;
+    font-size: 14px;
+}
+
+/* Sliders */
+input[type="range"] {
+    width: 100%;
+    height: 6px;
+    border-radius: 3px;
+    background: #333;
+    outline: none;
+    border: 1px solid #00ff00;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #00ff00;
+    cursor: pointer;
+    border: 2px solid #000;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #00ff00;
+    cursor: pointer;
+    border: 2px solid #000;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+}
+
+/* Fieldset para radio buttons */
+.char-set-fieldset {
+    border: 2px solid #00ff00;
+    border-radius: 8px;
+    padding: 15px;
+    background: rgba(0, 255, 0, 0.05);
+}
+
+.char-set-fieldset legend {
+    color: #00ff00;
+    font-weight: bold;
+    padding: 0 10px;
+    font-size: 12px;
+    text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+}
+
+.radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.radio-group label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 11px;
+}
+
+input[type="radio"] {
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border: 2px solid #00ff00;
+    border-radius: 50%;
+    background: transparent;
+    margin-right: 8px;
+    cursor: pointer;
+    position: relative;
+}
+
+input[type="radio"]:checked {
+    background: #00ff00;
+}
+
+input[type="radio"]:checked::after {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #000;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Botones */
+button {
+    background: transparent;
+    color: #00ff00;
+    border: 2px solid #00ff00;
+    border-radius: 6px;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    margin: 2px;
+}
+
+button:hover {
+    background: #00ff00;
+    color: #000;
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+    transform: translateY(-1px);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+#fullscreen-btn, #reset-btn {
+    flex: 1;
+    margin: 2px;
+}
+
+#toggle-controls {
+    width: 100%;
+    margin-top: 10px;
+}
+
+/* Valores dinámicos */
+#font-size-value,
+#speed-value,
+#density-value {
+    color: #00ff00;
+    font-weight: bold;
+    text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    #controls-panel {
+        top: 10px;
+        left: 10px;
+        right: 10px;
+        min-width: auto;
+        max-width: none;
+        padding: 15px;
+    }
+
+    .control-group {
+        margin-bottom: 12px;
+    }
+
+    button {
+        padding: 10px;
+        font-size: 12px;
+    }
+}
+
+/* Efectos de hover para el panel */
+#controls-panel:hover {
+    box-shadow: 0 0 30px rgba(0, 255, 0, 0.4);
+    border-color: #00ff88;
+}
+
+/* Animación de entrada */
+@keyframes slideIn {
+    from {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+#controls-panel {
+    animation: slideIn 0.5s ease-out;
+}
+
+/* Scroll personalizado para elementos que lo necesiten */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #000;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #00ff00;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #00ff88;
+}
