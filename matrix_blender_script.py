@@ -101,7 +101,10 @@ def create_glow_head():
 
     emission_node = nodes.new(type='ShaderNodeEmission')
     emission_node.inputs['Color'].default_value = (0.1, 1.0, 0.2, 1) # Color verde
-    nodes.get('Material Output').inputs['Surface'].connect(emission_node.outputs['Emission'])
+
+    # Usar el método links.new() para mayor robustez
+    mat_output = nodes.get('Material Output')
+    mat_head.node_tree.links.new(emission_node.outputs['Emission'], mat_output.inputs['Surface'])
 
     # Añadir driver para la pulsación del brillo
     strength_input = emission_node.inputs['Strength']
@@ -136,7 +139,7 @@ def create_rainbow_material():
 
     # Configurar valores iniciales
     hsv_node.inputs['Color'].default_value = (0.3, 1, 1, 1) # Verde base
-    emission_node.inputs['Strength'].default_value = 7.0
+    emission_node.inputs['Strength'].default_value = 15.0 # Aumentado para más "punch"
 
     # Añadir driver al Hue para el efecto arcoíris
     fcurve = hsv_node.inputs['Hue'].driver_add('default_value')
@@ -154,8 +157,9 @@ def update_rain_characters(scene):
         for obj in scene.objects:
             if obj.name.startswith("RainDrop_"):
                 obj.data.body = random.choice(KATAKANA)
+                obj.data.update_tag() # Forzar actualización del viewport
 
-def create_matrix_rain(columns=20, rows=15, spacing=0.8):
+def create_matrix_rain(columns=20, rows=15, spacing=0.8, anim_length=100):
     """Crea las columnas de texto que caen."""
     rainbow_material = create_rainbow_material()
 
@@ -180,20 +184,20 @@ def create_matrix_rain(columns=20, rows=15, spacing=0.8):
             text_obj.data.align_x = 'CENTER'
             text_obj.data.materials.append(rainbow_material)
 
-            # Animación de caída
-            text_obj.keyframe_insert(data_path="location", frame=1, index=2) # Z en el top
+            # Animación con desfase de inicio aleatorio
+            start_frame = random.randint(1, anim_length)
 
-            # Mover a la parte inferior y crear otro keyframe
+            # Mover a la parte superior y crear keyframe de inicio
+            text_obj.location.z = z_top
+            text_obj.keyframe_insert(data_path="location", frame=start_frame, index=2)
+
+            # Mover a la parte inferior y crear keyframe de fin
             text_obj.location.z = z_bottom
-            text_obj.keyframe_insert(data_path="location", frame=100, index=2) # Z en el bottom
+            text_obj.keyframe_insert(data_path="location", frame=start_frame + anim_length, index=2)
 
             # Hacer que la animación sea cíclica
             fcurve = text_obj.animation_data.action.fcurves.find('location', index=2)
             modifier = fcurve.modifiers.new(type='CYCLES')
-
-            # Desfase aleatorio en la animación para que no caigan todos a la vez
-            fcurve.keyframe_points[0].co.x += random.uniform(-50, 50)
-            fcurve.keyframe_points[1].co.x += random.uniform(-50, 50)
 
     # Registrar el handler para el cambio de caracteres
     # Primero, nos aseguramos de que no esté ya registrado
@@ -221,6 +225,6 @@ def setup_camera():
 if __name__ == "__main__":
     setup_scene()
     create_glow_head()
-    create_matrix_rain(columns=30, rows=20, spacing=0.7)
+    create_matrix_rain(columns=30, rows=20, spacing=0.7, anim_length=100)
     setup_camera()
     print("Script de Blender para Matrix Rain ejecutado.")
