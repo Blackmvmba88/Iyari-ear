@@ -172,7 +172,7 @@ def ocr_image(args):
 
 
 # ==============================================================================
-# Configuración de Argumentos y Script Principal
+# Argument Configuration and Main Script
 # ==============================================================================
 
 def main():
