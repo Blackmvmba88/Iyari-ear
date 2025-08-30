@@ -25,7 +25,7 @@ def list_presets():
     return f"Presets disponibles:\n{available_presets}"
 
 def resize_image(args):
-    """Lógica para el comando resize."""
+    """Logic for the resize command."""
     try:
         with Image.open(args.input_path) as img:
             output_img = None
