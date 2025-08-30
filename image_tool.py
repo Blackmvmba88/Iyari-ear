@@ -20,7 +20,7 @@ PRESETS = {
 }
 
 def list_presets():
-    """Devuelve un string formateado con los presets disponibles."""
+    """Returns a formatted string with available presets."""
     available_presets = "\n".join([f"  - {name}" for name in PRESETS.keys()])
     return f"Presets disponibles:\n{available_presets}"
 
