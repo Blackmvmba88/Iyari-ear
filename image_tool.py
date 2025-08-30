@@ -178,7 +178,7 @@ def ocr_image(args):
 def main():
     """Función principal que configura y ejecuta el parser de argumentos."""
     parser = argparse.ArgumentParser(
-        description="Una herramienta de línea de comandos para manipular imágenes.",
+        description="A command-line tool for image manipulation.",
         formatter_class=argparse.RawTextHelpFormatter
     )
     subparsers = parser.add_subparsers(dest="command", required=True, help="Comandos disponibles")
