@@ -102,15 +102,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    toggleBtn.addEventListener('click', () => {
+    toggleBtn.addEventListener('click', async () => {
         if (isRecording) {
             stopRecording();
         } else {
             // Asegurarse de que el socket está conectado antes de grabar
             if (!socket || socket.readyState !== WebSocket.OPEN) {
-                connectWebSocket();
-                // Pequeña espera para que el socket se conecte antes de empezar a grabar
-                setTimeout(startRecording, 1000);
+                try {
+                    await connectWebSocket();
+                    startRecording();
+                } catch (error) {
+                    // El error ya fue manejado en connectWebSocket
+                }
             } else {
                 startRecording();
             }
