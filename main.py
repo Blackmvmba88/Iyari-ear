@@ -5,13 +5,13 @@ import uvicorn
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.staticfiles import StaticFiles
 from starlette.responses import FileResponse
-
+import os
 # Crear la aplicación FastAPI
 app = FastAPI()
 
 # Montar los directorios de archivos estáticos (js, styles)
-app.mount("/js", StaticFiles(directory="js"), name="js")
-app.mount("/styles", StaticFiles(directory="styles"), name="styles")
+app.mount("/js", StaticFiles(directory=os.path.abspath("js")), name="js")
+app.mount("/styles", StaticFiles(directory=os.path.abspath("styles")), name="styles")
 
 # Inicializar el reconocedor de voz
 r = sr.Recognizer()
