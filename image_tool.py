@@ -116,7 +116,15 @@ def tile_image(args):
             # Pegar el azulejo en un patrón de mosaico
             for x in range(0, target_w, tile_w):
                 for y in range(0, target_h, tile_h):
-                    output_img.paste(tile_img, (x, y))
+                    # Calculate the region to fill
+                    paste_w = min(tile_w, target_w - x)
+                    paste_h = min(tile_h, target_h - y)
+                    if paste_w < tile_w or paste_h < tile_h:
+                        # Crop the tile to fit the remaining space
+                        cropped_tile = tile_img.crop((0, 0, paste_w, paste_h))
+                        output_img.paste(cropped_tile, (x, y))
+                    else:
+                        output_img.paste(tile_img, (x, y))
 
             output_img.save(args.output_path)
             print(f"¡Éxito! Imagen de mosaico guardada en '{args.output_path}'.")
