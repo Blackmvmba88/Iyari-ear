@@ -115,7 +115,7 @@ def tile_mosaic(tile_img: Optional[Image.Image], final_width: int, final_height:
 
     base_mode = "RGBA" if tile_img and tile_img.mode == "RGBA" else "RGB"
     out = Image.new(base_mode, (final_width, final_height))
-    tile = tile_img.convert(base_mode) if tile_img else Image.new("RGB", (0, 0))
+    tile = tile_img.convert(base_mode)
     tw, th = tile.size
 
     if tw <= 0 or th <= 0:
