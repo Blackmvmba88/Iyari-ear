@@ -145,12 +145,9 @@ def ocr_img(image: Optional[Image.Image]) -> str:
         return ""
     try:
         import pytesseract  # type: ignore
-        if image:
-            text = cast(str, pytesseract.image_to_string(image))  # type: ignore
-            text = text.strip()
-            return text if text else "Sin texto detectado."
-        else:
-            return "No image to process."
+        text = cast(str, pytesseract.image_to_string(image))  # type: ignore
+        text = text.strip()
+        return text if text else "Sin texto detectado."
     except ImportError:
         return "Instala pytesseract: pip install pytesseract. En macOS: brew install tesseract"
     except Exception as e:
