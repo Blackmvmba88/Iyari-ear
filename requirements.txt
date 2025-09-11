@@ -1,6 +1,18 @@
+<<<<<<< HEAD
 fastapi
 uvicorn
 websockets
 SpeechRecognition
 uvloop
 PyAudio
+=======
+# Runtime
+pillow
+gradio
+
+# Optional OCR support (requires system Tesseract)
+pytesseract
+
+# Testing
+pytest
+>>>>>>> 29fdccd (Auto stash before rebase of "image-processing-tool")
