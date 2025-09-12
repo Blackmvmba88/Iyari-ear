@@ -101,7 +101,10 @@ def create_glow_head():
 
     emission_node = nodes.new(type='ShaderNodeEmission')
     emission_node.inputs['Color'].default_value = (0.1, 1.0, 0.2, 1) # Color verde
-    nodes.get('Material Output').inputs['Surface'].connect(emission_node.outputs['Emission'])
+
+    # Usar el método links.new() para mayor robustez
+    mat_output = nodes.get('Material Output')
+    mat_head.node_tree.links.new(emission_node.outputs['Emission'], mat_output.inputs['Surface'])
 
     # Añadir driver para la pulsación del brillo
     strength_input = emission_node.inputs['Strength']
