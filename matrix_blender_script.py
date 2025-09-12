@@ -139,7 +139,7 @@ def create_rainbow_material():
 
     # Configurar valores iniciales
     hsv_node.inputs['Color'].default_value = (0.3, 1, 1, 1) # Verde base
-    emission_node.inputs['Strength'].default_value = 7.0
+    emission_node.inputs['Strength'].default_value = 15.0 # Aumentado para más "punch"
 
     # Añadir driver al Hue para el efecto arcoíris
     fcurve = hsv_node.inputs['Hue'].driver_add('default_value')
