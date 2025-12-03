@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let reconnectAttempts = 0;
     const MAX_RECONNECT_ATTEMPTS = 5;
     const RECONNECT_DELAY_MS = 3000;
+    const CONNECTION_WAIT_MS = 1000; // Tiempo de espera para conexión antes de iniciar grabación
 
     // Configuración
     const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
@@ -191,7 +192,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (socket && socket.readyState === WebSocket.OPEN) {
                         startRecording();
                     }
-                }, 1000);
+                }, CONNECTION_WAIT_MS);
             } else {
                 startRecording();
             }

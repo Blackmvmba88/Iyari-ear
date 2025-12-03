@@ -73,6 +73,15 @@ def validate_output_path(path: str) -> bool:
         return False
     return True
 
+
+def validate_aspect_ratio(ratio_w: int, ratio_h: int) -> bool:
+    """Valida que los valores de proporción sean válidos."""
+    if ratio_w <= 0 or ratio_h <= 0:
+        print("Error: Los valores de proporción deben ser mayores a 0.")
+        return False
+    return True
+
+
 def resize_image(args):
     """Logic for the resize command."""
     # Validar archivos de entrada y salida
@@ -114,8 +123,7 @@ def resize_image(args):
 
             elif args.aspect_ratio:
                 target_w_ratio, target_h_ratio = args.aspect_ratio
-                if target_w_ratio <= 0 or target_h_ratio <= 0:
-                    print("Error: Los valores de proporción deben ser mayores a 0.")
+                if not validate_aspect_ratio(target_w_ratio, target_h_ratio):
                     return
 
                 print(f"Ajustando a proporción {target_w_ratio}:{target_h_ratio}...")

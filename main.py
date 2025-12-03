@@ -80,6 +80,11 @@ app = FastAPI(title="Iyari-ear - Subtítulos en Tiempo Real")
 MAX_AUDIO_SIZE = 10 * 1024 * 1024  # 10 MB límite para chunks de audio
 MAX_CONNECTIONS = 100  # Límite de conexiones simultáneas
 
+# Port configuration
+MIN_PORT = 1
+MAX_PORT = 65535
+DEFAULT_PORT = 8000
+
 # Contador de conexiones activas
 active_connections = 0
 
@@ -187,12 +192,12 @@ if __name__ == "__main__":
     # El host y el puerto pueden configurarse mediante variables de entorno.
     host = os.environ.get("HOST", "127.0.0.1")
     try:
-        port = int(os.environ.get("PORT", 8000))
-        if port < 1 or port > 65535:
-            raise ValueError("Puerto fuera de rango")
+        port = int(os.environ.get("PORT", DEFAULT_PORT))
+        if port < MIN_PORT or port > MAX_PORT:
+            raise ValueError(f"Puerto fuera de rango ({MIN_PORT}-{MAX_PORT})")
     except ValueError as e:
-        logger.error(f"Puerto inválido: {e}. Usando puerto 8000.")
-        port = 8000
+        logger.error(f"Puerto inválido: {e}. Usando puerto {DEFAULT_PORT}.")
+        port = DEFAULT_PORT
 
     logger.info(f"Iniciando servidor en {host}:{port}")
     uvicorn.run(app, host=host, port=port)
