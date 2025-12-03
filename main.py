@@ -64,60 +64,135 @@ from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.staticfiles import StaticFiles
 from starlette.responses import FileResponse
 import os
-# Crear la aplicación FastAPI
-app = FastAPI()
+import logging
 
-# Montar los directorios de archivos estáticos (js, styles)
-app.mount("/js", StaticFiles(directory=os.path.abspath("js")), name="js")
-app.mount("/styles", StaticFiles(directory=os.path.abspath("styles")), name="styles")
+# Configurar logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
+
+# Crear la aplicación FastAPI
+app = FastAPI(title="Iyari-ear - Subtítulos en Tiempo Real")
+
+# Límites de seguridad
+MAX_AUDIO_SIZE = 10 * 1024 * 1024  # 10 MB límite para chunks de audio
+MAX_CONNECTIONS = 100  # Límite de conexiones simultáneas
+
+# Contador de conexiones activas
+active_connections = 0
+
+# Verificar que los directorios existan antes de montar
+js_dir = os.path.abspath("js")
+styles_dir = os.path.abspath("styles")
+
+if os.path.isdir(js_dir):
+    app.mount("/js", StaticFiles(directory=js_dir), name="js")
+else:
+    logger.warning(f"Directorio 'js' no encontrado en: {js_dir}")
+
+if os.path.isdir(styles_dir):
+    app.mount("/styles", StaticFiles(directory=styles_dir), name="styles")
+else:
+    logger.warning(f"Directorio 'styles' no encontrado en: {styles_dir}")
 
 # Inicializar el reconocedor de voz
 r = sr.Recognizer()
 
+
 @app.get("/")
 async def read_root():
     """Sirve el archivo index.html como la página principal."""
-    return FileResponse('index.html')
+    index_path = 'index.html'
+    if not os.path.isfile(index_path):
+        logger.error(f"Archivo index.html no encontrado: {index_path}")
+        return {"error": "Archivo index.html no encontrado"}
+    return FileResponse(index_path)
+
+
+@app.get("/health")
+async def health_check():
+    """Endpoint de salud para verificar que el servidor está funcionando."""
+    return {"status": "ok", "active_connections": active_connections}
+
 
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
     """
     Endpoint de WebSocket para la transcripción de audio.
     """
+    global active_connections
+
+    # Verificar límite de conexiones
+    if active_connections >= MAX_CONNECTIONS:
+        logger.warning("Límite de conexiones alcanzado. Rechazando nueva conexión.")
+        await websocket.close(code=1013, reason="Servidor saturado")
+        return
+
     await websocket.accept()
-    print("Cliente WebSocket conectado.")
+    active_connections += 1
+    logger.info(f"Cliente WebSocket conectado. Conexiones activas: {active_connections}")
+
     try:
         while True:
             # Espera recibir datos de audio del cliente
             audio_chunk = await websocket.receive_bytes()
 
+            # Validar tamaño del chunk de audio
+            if len(audio_chunk) > MAX_AUDIO_SIZE:
+                logger.warning(f"Chunk de audio demasiado grande: {len(audio_chunk)} bytes")
+                await websocket.send_text("[Error: Audio demasiado grande]")
+                continue
+
+            if len(audio_chunk) == 0:
+                logger.debug("Chunk de audio vacío recibido, ignorando.")
+                continue
+
             # Creamos un archivo de audio en memoria
             audio_file = io.BytesIO(audio_chunk)
 
-            with sr.AudioFile(audio_file) as source:
-                audio_data = r.record(source)
+            try:
+                with sr.AudioFile(audio_file) as source:
+                    audio_data = r.record(source)
+            except Exception as e:
+                logger.error(f"Error al procesar archivo de audio: {e}")
+                await websocket.send_text("[Error: Formato de audio no soportado]")
+                continue
 
             try:
                 # Transcribir usando la API de Google
                 text = r.recognize_google(audio_data, language='es-ES')
-                print(f"Texto reconocido: {text}")
+                logger.info(f"Texto reconocido: {text}")
                 await websocket.send_text(text)
 
             except sr.UnknownValueError:
-                print("Audio no reconocido.")
+                logger.debug("Audio no reconocido.")
                 await websocket.send_text("[Audio no reconocido]")
             except sr.RequestError as e:
-                print(f"Error en la API de Google: {e}")
+                logger.error(f"Error en la API de Google: {e}")
                 await websocket.send_text("[Error del servicio de transcripción]")
 
     except WebSocketDisconnect:
-        print("Cliente WebSocket desconectado.")
+        logger.info("Cliente WebSocket desconectado.")
     except Exception as e:
-        print(f"Ocurrió un error en el WebSocket: {e}")
+        logger.error(f"Ocurrió un error en el WebSocket: {e}")
+    finally:
+        active_connections -= 1
+        logger.info(f"Conexiones activas: {active_connections}")
+
 
 if __name__ == "__main__":
     # Iniciar el servidor Uvicorn
     # El host y el puerto pueden configurarse mediante variables de entorno.
     host = os.environ.get("HOST", "127.0.0.1")
-    port = int(os.environ.get("PORT", 8000))
+    try:
+        port = int(os.environ.get("PORT", 8000))
+        if port < 1 or port > 65535:
+            raise ValueError("Puerto fuera de rango")
+    except ValueError as e:
+        logger.error(f"Puerto inválido: {e}. Usando puerto 8000.")
+        port = 8000
+
+    logger.info(f"Iniciando servidor en {host}:{port}")
     uvicorn.run(app, host=host, port=port)

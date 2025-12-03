@@ -1,6 +1,15 @@
 import argparse
+import os
 import sys
 from PIL import Image, ImageOps
+
+# ==============================================================================
+# Constants
+# ==============================================================================
+
+# Límite máximo de dimensiones para evitar consumo excesivo de memoria
+MAX_DIMENSION = 20000
+MAX_PIXELS = 100_000_000  # 100 megapíxeles
 
 # ==============================================================================
 # Logic Functions
@@ -24,8 +33,54 @@ def list_presets():
     available_presets = "\n".join([f"  - {name}" for name in PRESETS.keys()])
     return f"Presets disponibles:\n{available_presets}"
 
+
+def validate_dimensions(width: int, height: int) -> bool:
+    """Valida que las dimensiones estén dentro de límites seguros."""
+    if width <= 0 or height <= 0:
+        print(f"Error: Las dimensiones deben ser mayores a 0 (recibido: {width}x{height}).")
+        return False
+    if width > MAX_DIMENSION or height > MAX_DIMENSION:
+        print(f"Error: Las dimensiones exceden el límite máximo de {MAX_DIMENSION}px.")
+        return False
+    if width * height > MAX_PIXELS:
+        print(f"Error: El total de píxeles ({width * height:,}) excede el límite de {MAX_PIXELS:,}.")
+        return False
+    return True
+
+
+def validate_input_file(path: str) -> bool:
+    """Valida que el archivo de entrada exista y sea legible."""
+    if not os.path.exists(path):
+        print(f"Error: No se encontró el archivo '{path}'.")
+        return False
+    if not os.path.isfile(path):
+        print(f"Error: '{path}' no es un archivo válido.")
+        return False
+    if not os.access(path, os.R_OK):
+        print(f"Error: No se tiene permiso de lectura para '{path}'.")
+        return False
+    return True
+
+
+def validate_output_path(path: str) -> bool:
+    """Valida que se pueda escribir en la ruta de salida."""
+    output_dir = os.path.dirname(path) or '.'
+    if not os.path.exists(output_dir):
+        print(f"Error: El directorio de salida '{output_dir}' no existe.")
+        return False
+    if not os.access(output_dir, os.W_OK):
+        print(f"Error: No se tiene permiso de escritura en '{output_dir}'.")
+        return False
+    return True
+
 def resize_image(args):
     """Logic for the resize command."""
+    # Validar archivos de entrada y salida
+    if not validate_input_file(args.input_path):
+        return
+    if not validate_output_path(args.output_path):
+        return
+
     try:
         with Image.open(args.input_path) as img:
             output_img = None
@@ -44,16 +99,25 @@ def resize_image(args):
                     target_height = int(target_width * ratio_h / ratio_w)
                     target_size = (target_width, target_height)
 
+                if not validate_dimensions(target_size[0], target_size[1]):
+                    return
+
                 print(f"Aplicando preset '{args.preset}' con tamaño final {target_size}...")
                 output_img = ImageOps.fit(img, target_size, Image.Resampling.LANCZOS, centering=(0.5, 0.5))
 
             elif args.size:
                 target_size = tuple(args.size)
+                if not validate_dimensions(target_size[0], target_size[1]):
+                    return
                 print(f"Redimensionando a tamaño fijo {target_size} (puede distorsionar)...")
                 output_img = img.resize(target_size, Image.Resampling.LANCZOS)
 
             elif args.aspect_ratio:
                 target_w_ratio, target_h_ratio = args.aspect_ratio
+                if target_w_ratio <= 0 or target_h_ratio <= 0:
+                    print("Error: Los valores de proporción deben ser mayores a 0.")
+                    return
+
                 print(f"Ajustando a proporción {target_w_ratio}:{target_h_ratio}...")
 
                 final_w, final_h = img.size
@@ -66,6 +130,8 @@ def resize_image(args):
                     final_w = int(final_h * target_ratio)
 
                 target_size = (final_w, final_h)
+                if not validate_dimensions(target_size[0], target_size[1]):
+                    return
                 output_img = ImageOps.fit(img, target_size, Image.Resampling.LANCZOS, centering=(0.5, 0.5))
 
             if output_img:
@@ -81,6 +147,20 @@ def resize_image(args):
 
 def crop_image(args):
     """Lógica para el comando crop."""
+    # Validar archivos de entrada y salida
+    if not validate_input_file(args.input_path):
+        return
+    if not validate_output_path(args.output_path):
+        return
+
+    # Validar dimensiones de recorte
+    if args.width <= 0 or args.height <= 0:
+        print("Error: El ancho y alto del recorte deben ser mayores a 0.")
+        return
+    if args.x < 0 or args.y < 0:
+        print("Error: Las coordenadas X e Y deben ser >= 0.")
+        return
+
     try:
         with Image.open(args.input_path) as img:
             # Las coordenadas para crop son (left, upper, right, lower)
@@ -103,10 +183,24 @@ def crop_image(args):
 
 def tile_image(args):
     """Lógica para el comando tile."""
+    # Validar archivos de entrada y salida
+    if not validate_input_file(args.input_path):
+        return
+    if not validate_output_path(args.output_path):
+        return
+
+    # Validar dimensiones del mosaico final
+    if not validate_dimensions(args.final_width, args.final_height):
+        return
+
     try:
         with Image.open(args.input_path) as tile_img:
             target_w, target_h = args.final_width, args.final_height
             tile_w, tile_h = tile_img.size
+
+            if tile_w <= 0 or tile_h <= 0:
+                print("Error: La imagen del azulejo tiene dimensiones inválidas.")
+                return
 
             print(f"Creando un mosaico de {target_w}x{target_h} usando un 'azulejo' de {tile_w}x{tile_h}...")
 
@@ -136,6 +230,12 @@ def tile_image(args):
 
 def mirror_image(args):
     """Lógica para el comando mirror."""
+    # Validar archivos de entrada y salida
+    if not validate_input_file(args.input_path):
+        return
+    if not validate_output_path(args.output_path):
+        return
+
     try:
         with Image.open(args.input_path) as img:
             print(f"Creando efecto espejo (volteo horizontal) de '{args.input_path}'...")
@@ -151,6 +251,10 @@ def mirror_image(args):
 
 def ocr_image(args):
     """Lógica para el comando ocr."""
+    # Validar archivo de entrada
+    if not validate_input_file(args.input_path):
+        return
+
     try:
         # Pytesseract es una dependencia opcional, la importamos aquí.
         import pytesseract

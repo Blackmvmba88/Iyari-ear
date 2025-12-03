@@ -6,27 +6,43 @@ from typing import Dict, Tuple, Union, List, Optional, cast
 # Mantengo el type: ignore para permitir correr en dev.
 PRESETS: Dict[str, Dict[str, Union[Tuple[int, int], List[int], int]]] = {}
 try:
-    from image_tool import PRESETS as imported_presets  # type: ignore
+    from image_tool import PRESETS as imported_presets, MAX_DIMENSION, MAX_PIXELS  # type: ignore
     PRESETS.update(cast(Dict[str, Dict[str, Union[Tuple[int, int], List[int], int]]], imported_presets))
 except ImportError:
-    pass
+    MAX_DIMENSION = 20000
+    MAX_PIXELS = 100_000_000
 
 # ---- Tipos ----
 PresetDict = Dict[str, Dict[str, Union[Tuple[int, int], List[int], int]]]
+
+
+def validate_dimensions(width: int, height: int) -> None:
+    """Valida que las dimensiones estén dentro de límites seguros."""
+    if width <= 0 or height <= 0:
+        raise gr.Error(f"Las dimensiones deben ser mayores a 0 (recibido: {width}x{height}).")
+    if width > MAX_DIMENSION or height > MAX_DIMENSION:
+        raise gr.Error(f"Las dimensiones exceden el límite máximo de {MAX_DIMENSION}px.")
+    if width * height > MAX_PIXELS:
+        raise gr.Error(f"El total de píxeles ({width * height:,}) excede el límite de {MAX_PIXELS:,}.")
+
 
 # ---- Helpers de tamaño/ratio ----
 def resize_with_preset(image: Optional[Image.Image], preset: str) -> Image.Image:
     if image is None:
         raise gr.Error("Sube una imagen primero.")
+    if not preset:
+        raise gr.Error("Selecciona un preset.")
     if preset not in PRESETS:
         raise gr.Error(f"Preset inválido: {preset}")
 
     data = PRESETS[preset]
-    assert isinstance(data, dict), "Data debe ser un diccionario"
+    if not isinstance(data, dict):
+        raise gr.Error("Configuración de preset inválida.")
     
     # 1) Caso A: 'size' directa (w, h)
     target_size = data.get("size", (0, 0))
-    assert isinstance(target_size, tuple), "target_size debe ser una tupla"
+    if not isinstance(target_size, tuple):
+        raise gr.Error("Formato de tamaño inválido en preset.")
     if target_size != (0, 0):
         pass
     else:
@@ -34,7 +50,8 @@ def resize_with_preset(image: Optional[Image.Image], preset: str) -> Image.Image
         rw, rh = (1, 1)
         if "aspect_ratio" in data:
             ratio_data = data["aspect_ratio"]
-            assert isinstance(ratio_data, (list, tuple)), "ratio_data debe ser list o tuple"
+            if not isinstance(ratio_data, (list, tuple)):
+                raise gr.Error("Formato de ratio inválido en preset.")
             if len(ratio_data) == 2:
                 rw, rh = int(ratio_data[0]), int(ratio_data[1])
 
@@ -53,13 +70,16 @@ def resize_with_preset(image: Optional[Image.Image], preset: str) -> Image.Image
 
         target_size = (w, h)
 
+    validate_dimensions(target_size[0], target_size[1])
     return ImageOps.fit(image, target_size, Image.Resampling.LANCZOS, centering=(0.5, 0.5))
 
 
 def resize_to_size(image: Optional[Image.Image], width: int, height: int) -> Image.Image:
     if image is None:
         raise gr.Error("Sube una imagen primero.")
-    return image.resize((int(width), int(height)), Image.Resampling.LANCZOS)
+    w, h = int(width), int(height)
+    validate_dimensions(w, h)
+    return image.resize((w, h), Image.Resampling.LANCZOS)
 
 
 def resize_to_aspect_ratio(image: Optional[Image.Image], rw: int, rh: int) -> Image.Image:
@@ -89,6 +109,13 @@ def crop_box(image: Optional[Image.Image], x: int, y: int, width: int, height: i
     if image is None:
         raise gr.Error("Sube una imagen primero.")
     x, y, width, height = int(x), int(y), int(width), int(height)
+
+    # Validar valores de entrada
+    if width <= 0 or height <= 0:
+        raise gr.Error("El ancho y alto del recorte deben ser mayores a 0.")
+    if x < 0 or y < 0:
+        raise gr.Error("Las coordenadas X e Y deben ser >= 0.")
+
     box = (x, y, x + width, y + height)
 
     # Clamp dentro de la imagen
@@ -98,7 +125,7 @@ def crop_box(image: Optional[Image.Image], x: int, y: int, width: int, height: i
     bottom = min(image.height, box[3])
 
     if right <= left or bottom <= top:
-        raise gr.Error("La caja de recorte es inválida.")
+        raise gr.Error("La caja de recorte es inválida o está fuera de la imagen.")
     return image.crop((left, top, right, bottom))
 
 
@@ -110,8 +137,9 @@ def tile_mosaic(tile_img: Optional[Image.Image], final_width: int, final_height:
     if tile_img is None:
         raise gr.Error("Sube un azulejo (tile) primero.")
     final_width, final_height = int(final_width), int(final_height)
-    if final_width <= 0 or final_height <= 0:
-        raise gr.Error("Dimensiones finales deben ser positivas.")
+
+    # Validar dimensiones
+    validate_dimensions(final_width, final_height)
 
     base_mode = "RGBA" if tile_img and tile_img.mode == "RGBA" else "RGB"
     out = Image.new(base_mode, (final_width, final_height))
