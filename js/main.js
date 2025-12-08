@@ -3,9 +3,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const subtitlesElement = document.getElementById('subtitles');
     const statusElement = document.getElementById('status');
     const toggleBtn = document.getElementById('toggle-btn');
+    const languageSelect = document.getElementById('language-select');
 
     // Verificar que los elementos existan
-    if (!subtitlesElement || !statusElement || !toggleBtn) {
+    if (!subtitlesElement || !statusElement || !toggleBtn || !languageSelect) {
         console.error('Error: Elementos del DOM no encontrados');
         return;
     }
@@ -46,6 +47,12 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log('WebSocket conectado.');
             statusElement.textContent = 'Estado: Listo para iniciar';
             reconnectAttempts = 0; // Reset reconnect counter on successful connection
+            
+            // Send initial language preference
+            const language = languageSelect.value;
+            if (socket.readyState === WebSocket.OPEN) {
+                socket.send(JSON.stringify({ type: 'language', language: language }));
+            }
         };
 
         socket.onmessage = (event) => {
@@ -196,6 +203,18 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 startRecording();
             }
+        }
+    });
+
+    // Update language when selection changes
+    languageSelect.addEventListener('change', () => {
+        const language = languageSelect.value;
+        console.log('Idioma cambiado a:', language);
+        
+        // Send language update to server if connected
+        if (socket && socket.readyState === WebSocket.OPEN) {
+            socket.send(JSON.stringify({ type: 'language', language: language }));
+            subtitlesElement.textContent = `Idioma cambiado a: ${language === 'es-ES' ? 'Español' : 'English'}`;
         }
     });
 

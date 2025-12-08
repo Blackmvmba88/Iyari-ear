@@ -60,6 +60,50 @@ body {
 }
 
 /* Controles */
+.control-group {
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    font-size: 1rem;
+}
+
+.control-group label {
+    color: #00ff00;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.control-group input[type="checkbox"] {
+    cursor: pointer;
+    width: 18px;
+    height: 18px;
+}
+
+.control-group select {
+    background: #003300;
+    color: #00ff00;
+    border: 2px solid #00ff00;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-family: 'Courier New', monospace;
+    font-size: 1rem;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.control-group select:hover {
+    background: #004400;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+}
+
+.control-group select:focus {
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+}
+
 #controls {
     height: 80px;
     display: flex;

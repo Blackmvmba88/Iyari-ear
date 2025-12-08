@@ -139,10 +139,37 @@ async def websocket_endpoint(websocket: WebSocket):
     active_connections += 1
     logger.info(f"Cliente WebSocket conectado. Conexiones activas: {active_connections}")
 
+    # Default language is Spanish
+    current_language = 'es-ES'
+
     try:
         while True:
-            # Espera recibir datos de audio del cliente
-            audio_chunk = await websocket.receive_bytes()
+            # Espera recibir datos del cliente (puede ser audio binario o mensaje JSON)
+            try:
+                # Try to receive as text first (for JSON messages)
+                message = await websocket.receive()
+                
+                # Check if it's a text message (language selection)
+                if 'text' in message:
+                    try:
+                        import json
+                        data = json.loads(message['text'])
+                        if data.get('type') == 'language':
+                            current_language = data.get('language', 'es-ES')
+                            logger.info(f"Idioma cambiado a: {current_language}")
+                            continue
+                    except json.JSONDecodeError:
+                        logger.warning("Mensaje de texto no es JSON válido")
+                        continue
+                
+                # If it's bytes, process as audio
+                if 'bytes' not in message:
+                    continue
+                    
+                audio_chunk = message['bytes']
+            except Exception as e:
+                logger.error(f"Error al recibir mensaje: {e}")
+                continue
 
             # Validar tamaño del chunk de audio
             if len(audio_chunk) > MAX_AUDIO_SIZE:
@@ -166,9 +193,9 @@ async def websocket_endpoint(websocket: WebSocket):
                 continue
 
             try:
-                # Transcribir usando la API de Google
-                text = r.recognize_google(audio_data, language='es-ES')
-                logger.info(f"Texto reconocido: {text}")
+                # Transcribir usando la API de Google con el idioma seleccionado
+                text = r.recognize_google(audio_data, language=current_language)
+                logger.info(f"Texto reconocido ({current_language}): {text}")
                 await websocket.send_text(text)
 
             except sr.UnknownValueError:
