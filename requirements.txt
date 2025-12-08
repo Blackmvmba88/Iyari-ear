@@ -1,18 +1,19 @@
-<<<<<<< HEAD
+# Runtime - Server
 fastapi
 uvicorn
 websockets
 SpeechRecognition
-uvloop
-PyAudio
-=======
-# Runtime
+
+# Runtime - Image processing
 pillow
 gradio
+
+# Optional dependencies
+# uvloop  # Unix only, not required
+# PyAudio  # Requires PortAudio system library
 
 # Optional OCR support (requires system Tesseract)
 pytesseract
 
 # Testing
 pytest
->>>>>>> 29fdccd (Auto stash before rebase of "image-processing-tool")
