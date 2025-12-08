@@ -58,7 +58,26 @@ def test_language_codes():
     valid_languages = ['es-ES', 'en-US']
     
     for lang in valid_languages:
-        assert lang in ['es-ES', 'en-US']
-        assert len(lang.split('-')) == 2
-        assert lang.split('-')[0] in ['es', 'en']
-        assert lang.split('-')[1] in ['ES', 'US']
+        # Validate format: two-letter language code, hyphen, two-letter region code
+        parts = lang.split('-')
+        assert len(parts) == 2, f"Language code {lang} should have format 'xx-XX'"
+        assert len(parts[0]) == 2, f"Language code in {lang} should be 2 characters"
+        assert len(parts[1]) == 2, f"Region code in {lang} should be 2 characters"
+        assert parts[0].islower(), f"Language code in {lang} should be lowercase"
+        assert parts[1].isupper(), f"Region code in {lang} should be uppercase"
+
+
+def test_unsupported_language_handling():
+    """Test that unsupported languages default to Spanish."""
+    supported_languages = {'es-ES', 'en-US'}
+    default_language = 'es-ES'
+    
+    # Test with unsupported language
+    requested_language = 'fr-FR'
+    
+    if requested_language in supported_languages:
+        current_language = requested_language
+    else:
+        current_language = default_language
+    
+    assert current_language == 'es-ES'

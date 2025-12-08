@@ -59,6 +59,7 @@ plt.show()
 import asyncio
 import speech_recognition as sr
 import io
+import json
 import uvicorn
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.staticfiles import StaticFiles
@@ -84,6 +85,10 @@ MAX_CONNECTIONS = 100  # Límite de conexiones simultáneas
 MIN_PORT = 1
 MAX_PORT = 65535
 DEFAULT_PORT = 8000
+
+# Supported languages for speech recognition
+SUPPORTED_LANGUAGES = {'es-ES', 'en-US'}
+DEFAULT_LANGUAGE = 'es-ES'
 
 # Contador de conexiones activas
 active_connections = 0
@@ -140,7 +145,7 @@ async def websocket_endpoint(websocket: WebSocket):
     logger.info(f"Cliente WebSocket conectado. Conexiones activas: {active_connections}")
 
     # Default language is Spanish
-    current_language = 'es-ES'
+    current_language = DEFAULT_LANGUAGE
 
     try:
         while True:
@@ -152,11 +157,15 @@ async def websocket_endpoint(websocket: WebSocket):
                 # Check if it's a text message (language selection)
                 if 'text' in message:
                     try:
-                        import json
                         data = json.loads(message['text'])
-                        if data.get('type') == 'language':
-                            current_language = data.get('language', 'es-ES')
-                            logger.info(f"Idioma cambiado a: {current_language}")
+                        if isinstance(data, dict) and data.get('type') == 'language':
+                            requested_language = data.get('language', DEFAULT_LANGUAGE)
+                            # Validate language is supported
+                            if requested_language in SUPPORTED_LANGUAGES:
+                                current_language = requested_language
+                                logger.info(f"Idioma cambiado a: {current_language}")
+                            else:
+                                logger.warning(f"Idioma no soportado: {requested_language}. Usando {DEFAULT_LANGUAGE}")
                             continue
                     except json.JSONDecodeError:
                         logger.warning("Mensaje de texto no es JSON válido")
