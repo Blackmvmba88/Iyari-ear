@@ -59,6 +59,7 @@ plt.show()
 import asyncio
 import speech_recognition as sr
 import io
+import json
 import uvicorn
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.staticfiles import StaticFiles
@@ -84,6 +85,10 @@ MAX_CONNECTIONS = 100  # Límite de conexiones simultáneas
 MIN_PORT = 1
 MAX_PORT = 65535
 DEFAULT_PORT = 8000
+
+# Supported languages for speech recognition
+SUPPORTED_LANGUAGES = {'es-ES', 'en-US'}
+DEFAULT_LANGUAGE = 'es-ES'
 
 # Contador de conexiones activas
 active_connections = 0
@@ -139,10 +144,41 @@ async def websocket_endpoint(websocket: WebSocket):
     active_connections += 1
     logger.info(f"Cliente WebSocket conectado. Conexiones activas: {active_connections}")
 
+    # Default language is Spanish
+    current_language = DEFAULT_LANGUAGE
+
     try:
         while True:
-            # Espera recibir datos de audio del cliente
-            audio_chunk = await websocket.receive_bytes()
+            # Espera recibir datos del cliente (puede ser audio binario o mensaje JSON)
+            try:
+                # Try to receive as text first (for JSON messages)
+                message = await websocket.receive()
+                
+                # Check if it's a text message (language selection)
+                if 'text' in message:
+                    try:
+                        data = json.loads(message['text'])
+                        if isinstance(data, dict) and data.get('type') == 'language':
+                            requested_language = data.get('language', DEFAULT_LANGUAGE)
+                            # Validate language is supported
+                            if requested_language in SUPPORTED_LANGUAGES:
+                                current_language = requested_language
+                                logger.info(f"Idioma cambiado a: {current_language}")
+                            else:
+                                logger.warning(f"Idioma no soportado: {requested_language}. Usando {DEFAULT_LANGUAGE}")
+                            continue
+                    except json.JSONDecodeError:
+                        logger.warning("Mensaje de texto no es JSON válido")
+                        continue
+                
+                # If it's bytes, process as audio
+                if 'bytes' not in message:
+                    continue
+                    
+                audio_chunk = message['bytes']
+            except Exception as e:
+                logger.error(f"Error al recibir mensaje: {e}")
+                continue
 
             # Validar tamaño del chunk de audio
             if len(audio_chunk) > MAX_AUDIO_SIZE:
@@ -166,9 +202,9 @@ async def websocket_endpoint(websocket: WebSocket):
                 continue
 
             try:
-                # Transcribir usando la API de Google
-                text = r.recognize_google(audio_data, language='es-ES')
-                logger.info(f"Texto reconocido: {text}")
+                # Transcribir usando la API de Google con el idioma seleccionado
+                text = r.recognize_google(audio_data, language=current_language)
+                logger.info(f"Texto reconocido ({current_language}): {text}")
                 await websocket.send_text(text)
 
             except sr.UnknownValueError:
