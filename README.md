@@ -10,6 +10,101 @@ La aplicación tiene dos partes principales:
 1.  **Frontend**: Una página web (HTML, CSS, JavaScript) que se ejecuta en el navegador. Se encarga de pedir permiso para el micrófono, grabar el audio y enviarlo al backend. También recibe el texto transcrito y lo muestra.
 2.  **Backend**: Un servidor en Python (FastAPI, WebSockets) que recibe los fragmentos de audio, utiliza la API de reconocimiento de voz de Google para transcribirlos a texto y los devuelve al frontend.
 
+## Ejemplos de Uso Real 🌍
+
+### Ejemplo 1: Conversación cara a cara
+
+María tiene pérdida auditiva parcial. Está sentada con una amiga en una cafetería ruidosa.
+Coloca su celular frente a la mesa y abre Iyari-ear.
+
+La app muestra en tiempo real:
+
+```
+— ¿Quieres café o té?
+— Café, por favor.
+— ¿Azúcar?
+— No, gracias.
+```
+
+María no necesita pedir que repitan. Lee y participa.
+
+### Ejemplo 2: Consulta médica
+
+Un paciente con dificultad auditiva asiste al doctor.
+
+El doctor habla normalmente.
+El celular del paciente muestra:
+
+```
+Doctor: Vamos a ajustar la dosis.
+Doctor: ¿Has tenido mareos últimamente?
+Paciente: No, solo un poco de cansancio.
+```
+
+No hay grabaciones.
+No hay almacenamiento.
+Solo texto en tiempo real.
+
+### Ejemplo 3: Apoyo familiar
+
+Una abuela con problemas auditivos usa una tablet durante la comida familiar.
+
+La conversación aparece como subtítulos grandes y claros:
+
+```
+— El pastel es de chocolate.
+— Cumples 8 años mañana.
+— ¿Te gustó la escuela?
+```
+
+La tecnología desaparece.
+Solo queda la conversación.
+
+## Flujo de la Aplicación 🔄
+
+```
+Micrófono del navegador
+        ↓
+Fragmentos de audio
+        ↓
+Servidor Python (WebSockets)
+        ↓
+API de reconocimiento de voz
+        ↓
+Texto transcrito
+        ↓
+Subtítulos en pantalla
+```
+
+Todo ocurre en segundos.
+
+## Qué Iyari-ear NO es 🚫
+
+- **No es una grabadora de audio**
+- **No es un sistema de vigilancia**
+- **No guarda conversaciones**
+- **No reemplaza intérpretes de lengua de señas**
+- **No es perfecto en ambientes extremadamente ruidosos**
+
+Es una herramienta de apoyo, no de control.
+
+## Limitaciones Conocidas ⚠️
+
+- **Requiere conexión a internet**
+- **La precisión depende del ruido ambiental**
+- **Acentos muy marcados pueden afectar la transcripción**
+- **No está pensada para transcripción legal o forense**
+
+Estas limitaciones son parte del diseño ético del proyecto.
+
+## Diseño Ético ❤️
+
+Iyari-ear fue creada con una intención clara:
+
+- Ayudar a escuchar sin invadir.
+- Apoyar sin vigilar.
+- Mostrar palabras, no juzgar voces.
+
 ## Requisitos
 
 - Python 3.7 o superior.
