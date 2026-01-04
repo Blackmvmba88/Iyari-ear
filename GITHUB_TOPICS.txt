@@ -1,0 +1,31 @@
+GitHub Repository Topics to Add
+================================
+
+To improve discoverability and connect this project with the community,
+add the following topics to the GitHub repository:
+
+Topics to add:
+- accessibility
+- speech-to-text
+- assistive-technology
+- realtime
+- ethical-tech
+- subtitles
+- transcription
+- websocket
+- fastapi
+- python
+
+How to add topics:
+1. Go to the repository page on GitHub
+2. Click on the settings icon (gear) next to "About" on the right side
+3. Add the topics listed above in the "Topics" field
+4. Add the manifesto as the repository description:
+   "Subtítulos en tiempo real para que nadie se quede fuera de la conversación."
+
+These topics will help people discover this project when searching for:
+- Accessibility tools
+- Speech recognition projects
+- Assistive technology
+- Real-time transcription solutions
+- Ethical technology projects
