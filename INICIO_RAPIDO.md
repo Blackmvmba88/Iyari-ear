@@ -17,7 +17,19 @@
 Subtítulos en tiempo real para conversaciones cara a cara. Accesibilidad simple, ética y humana.
 ```
 
-**Topics (separados por espacios):**
+**Topics (uno por línea para copiar fácil):**
+```
+accessibility
+speech-to-text
+realtime
+assistive-technology
+ethical-tech
+web-audio
+subtitles
+hearing-support
+```
+
+O todos juntos separados por espacios:
 ```
 accessibility speech-to-text realtime assistive-technology ethical-tech web-audio subtitles hearing-support
 ```

@@ -49,7 +49,7 @@ Un celular moderno sobre una mesa de madera clara, vista desde arriba. La pantal
 
 - **Resolución recomendada:** 1200x675px (16:9) o 800x450px
 - **Formato:** PNG o JPG
-- **Peso:** Menos de 500KB (optimizado para web)
+- **Tamaño del archivo:** Menos de 500KB (optimizado para web)
 - **Orientación:** Horizontal (landscape)
 
 ---

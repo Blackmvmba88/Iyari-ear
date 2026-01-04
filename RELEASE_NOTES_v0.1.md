@@ -126,8 +126,10 @@ Las próximas versiones mejorarán la experiencia sin comprometer los principios
 
 ---
 
-**Publicado:** [Fecha de publicación]
-**Licencia:** [Especificar licencia]
+**Publicado:** [Fecha a completar al publicar el release]
+
+**Licencia:** [MIT License - o la que corresponda al proyecto]
+
 **Mantenedor:** [@Blackmvmba88](https://github.com/Blackmvmba88)
 
 ---
