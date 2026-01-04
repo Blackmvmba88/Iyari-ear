@@ -11,6 +11,9 @@ import socket
 import webbrowser
 from pathlib import Path
 
+# Constants
+MAX_MICROPHONES_TO_DISPLAY = 5
+
 
 def check_port_available(port: int, host: str = "127.0.0.1") -> bool:
     """Verifica si un puerto está disponible"""
@@ -31,10 +34,10 @@ def check_microphone():
         mic_list = sr.Microphone.list_microphone_names()
         if mic_list:
             print(f"✅ Encontrados {len(mic_list)} dispositivos de audio:")
-            for i, name in enumerate(mic_list[:5]):  # Mostrar solo los primeros 5
+            for i, name in enumerate(mic_list[:MAX_MICROPHONES_TO_DISPLAY]):
                 print(f"   {i}: {name}")
-            if len(mic_list) > 5:
-                print(f"   ... y {len(mic_list) - 5} más")
+            if len(mic_list) > MAX_MICROPHONES_TO_DISPLAY:
+                print(f"   ... y {len(mic_list) - MAX_MICROPHONES_TO_DISPLAY} más")
             return True
         else:
             print("❌ No se encontraron dispositivos de micrófono")

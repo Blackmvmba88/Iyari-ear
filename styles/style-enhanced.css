@@ -311,6 +311,8 @@ body.high-contrast .control-group label {
 
 /* Modo rainbow (activable via checkbox) */
 body.rainbow-mode #subtitles {
+    /* Fallback color for browsers without background-clip support */
+    color: #00ff9f;
     background: linear-gradient(90deg, 
         #ff0080, #ff8c00, #ffff00, 
         #00ff00, #00bfff, #8b00ff
@@ -320,6 +322,14 @@ body.rainbow-mode #subtitles {
     -webkit-text-fill-color: transparent;
     background-clip: text;
     animation: rainbow-flow 3s linear infinite;
+}
+
+/* Fallback for browsers without background-clip support */
+@supports not (background-clip: text) {
+    body.rainbow-mode #subtitles {
+        color: #00ff9f;
+        background: none;
+    }
 }
 
 @keyframes rainbow-flow {

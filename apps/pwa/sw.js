@@ -3,7 +3,7 @@ const CACHE_NAME = 'iyari-ear-v1';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
-  '/styles/style.css',
+  '/styles/style-enhanced.css',
   '/js/main.js',
   '/apps/pwa/manifest.json'
 ];
