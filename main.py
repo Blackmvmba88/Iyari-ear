@@ -3,11 +3,22 @@ import speech_recognition as sr
 import io
 import json
 import uvicorn
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect, UploadFile, File, HTTPException
 from fastapi.staticfiles import StaticFiles
-from starlette.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
+from pydantic import BaseModel
 import os
 import logging
+import tempfile
+from typing import Optional
+
+# Importar módulos de subtítulos
+try:
+    from subtitle_processor import SubtitleProcessor, process_subtitle_file
+    SUBTITLE_SUPPORT = True
+except ImportError:
+    SUBTITLE_SUPPORT = False
+    logging.warning("Módulo de procesamiento de subtítulos no disponible")
 
 # Configurar logging
 logging.basicConfig(
@@ -58,6 +69,22 @@ else:
 # Inicializar el reconocedor de voz
 r = sr.Recognizer()
 
+# Modelos Pydantic para API de subtítulos
+class SubtitleProcessRequest(BaseModel):
+    """Solicitud de procesamiento de subtítulos"""
+    validate: bool = True
+    optimize: bool = True
+    output_format: Optional[str] = None
+
+
+class SubtitleProcessResponse(BaseModel):
+    """Respuesta de procesamiento de subtítulos"""
+    success: bool
+    stats: dict
+    validation_issues: list
+    optimization_changes: int
+    download_url: Optional[str] = None
+
 
 @app.get("/")
 async def read_root():
@@ -72,7 +99,207 @@ async def read_root():
 @app.get("/health")
 async def health_check():
     """Endpoint de salud para verificar que el servidor está funcionando."""
-    return {"status": "ok", "active_connections": active_connections}
+    return {
+        "status": "ok", 
+        "active_connections": active_connections,
+        "subtitle_support": SUBTITLE_SUPPORT
+    }
+
+
+@app.post("/api/subtitles/process")
+async def process_subtitle_endpoint(
+    file: UploadFile = File(...),
+    validate: bool = True,
+    optimize: bool = True,
+    output_format: Optional[str] = None
+):
+    """
+    Endpoint para procesar y optimizar archivos de subtítulos
+    
+    Args:
+        file: Archivo de subtítulos (SRT, VTT, ASS)
+        validate: Si se debe validar el archivo
+        optimize: Si se debe optimizar el archivo
+        output_format: Formato de salida (srt, vtt)
+    
+    Returns:
+        JSON con resultados del procesamiento y URL de descarga
+    """
+    if not SUBTITLE_SUPPORT:
+        raise HTTPException(
+            status_code=503,
+            detail="Módulo de procesamiento de subtítulos no disponible"
+        )
+    
+    # Validar extensión
+    filename = file.filename
+    ext = os.path.splitext(filename)[1].lower()
+    
+    if ext not in ['.srt', '.vtt', '.ass', '.ssa']:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Formato no soportado: {ext}. Usa .srt, .vtt, .ass o .ssa"
+        )
+    
+    # Crear archivos temporales
+    with tempfile.NamedTemporaryFile(delete=False, suffix=ext) as tmp_input:
+        content = await file.read()
+        tmp_input.write(content)
+        tmp_input_path = tmp_input.name
+    
+    # Determinar formato de salida
+    if output_format is None:
+        output_format = 'srt' if ext != '.vtt' else 'vtt'
+    
+    # Procesar archivo
+    try:
+        with tempfile.NamedTemporaryFile(
+            delete=False, 
+            suffix=f'.{output_format}',
+            mode='w'
+        ) as tmp_output:
+            tmp_output_path = tmp_output.name
+        
+        success, results = process_subtitle_file(
+            tmp_input_path,
+            tmp_output_path,
+            validate=validate,
+            optimize=optimize,
+            output_format=output_format
+        )
+        
+        if not success:
+            raise HTTPException(
+                status_code=400,
+                detail="Error al procesar archivo de subtítulos"
+            )
+        
+        # Generar URL de descarga temporal
+        # Guardar en directorio temporal con nombre único
+        import uuid
+        download_id = str(uuid.uuid4())
+        download_dir = tempfile.gettempdir()
+        final_path = os.path.join(download_dir, f"subtitle_{download_id}.{output_format}")
+        
+        import shutil
+        shutil.move(tmp_output_path, final_path)
+        
+        # Guardar metadata para descarga posterior
+        metadata_path = os.path.join(download_dir, f"subtitle_{download_id}.json")
+        with open(metadata_path, 'w') as f:
+            json.dump({
+                'original_filename': filename,
+                'format': output_format,
+                'processed_at': str(os.path.getmtime(final_path))
+            }, f)
+        
+        return {
+            "success": True,
+            "stats": results['stats'],
+            "validation_issues": results['validation_issues'],
+            "optimization_changes": results['optimization_changes'],
+            "download_url": f"/api/subtitles/download/{download_id}"
+        }
+        
+    except Exception as e:
+        logger.error(f"Error procesando subtítulo: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        # Limpiar archivo temporal de entrada
+        if os.path.exists(tmp_input_path):
+            os.unlink(tmp_input_path)
+
+
+@app.get("/api/subtitles/download/{download_id}")
+async def download_subtitle(download_id: str):
+    """
+    Descarga un archivo de subtítulos procesado
+    
+    Args:
+        download_id: ID único del archivo procesado
+    
+    Returns:
+        Archivo de subtítulos procesado
+    """
+    download_dir = tempfile.gettempdir()
+    
+    # Buscar archivo con diferentes extensiones
+    for ext in ['srt', 'vtt']:
+        file_path = os.path.join(download_dir, f"subtitle_{download_id}.{ext}")
+        metadata_path = os.path.join(download_dir, f"subtitle_{download_id}.json")
+        
+        if os.path.exists(file_path):
+            # Leer metadata
+            original_filename = f"optimized.{ext}"
+            if os.path.exists(metadata_path):
+                try:
+                    with open(metadata_path, 'r') as f:
+                        metadata = json.load(f)
+                        original_filename = metadata.get('original_filename', original_filename)
+                        # Cambiar extensión al formato procesado
+                        original_filename = os.path.splitext(original_filename)[0] + f'.optimized.{ext}'
+                except:
+                    pass
+            
+            return FileResponse(
+                file_path,
+                media_type='text/plain',
+                filename=original_filename
+            )
+    
+    raise HTTPException(status_code=404, detail="Archivo no encontrado o expirado")
+
+
+@app.get("/api/subtitles/validate")
+async def validate_subtitle_endpoint(file: UploadFile = File(...)):
+    """
+    Valida un archivo de subtítulos sin modificarlo
+    
+    Args:
+        file: Archivo de subtítulos a validar
+    
+    Returns:
+        Lista de problemas encontrados
+    """
+    if not SUBTITLE_SUPPORT:
+        raise HTTPException(
+            status_code=503,
+            detail="Módulo de procesamiento de subtítulos no disponible"
+        )
+    
+    # Crear archivo temporal
+    with tempfile.NamedTemporaryFile(delete=False, suffix=os.path.splitext(file.filename)[1]) as tmp:
+        content = await file.read()
+        tmp.write(content)
+        tmp_path = tmp.name
+    
+    try:
+        processor = SubtitleProcessor()
+        if not processor.load_from_file(tmp_path):
+            raise HTTPException(
+                status_code=400,
+                detail="Error al cargar archivo de subtítulos"
+            )
+        
+        issues = processor.validate()
+        stats = processor.get_stats()
+        
+        return {
+            "success": True,
+            "stats": stats,
+            "issues": issues,
+            "total_issues": len(issues),
+            "errors": len([i for i in issues if i['severity'] == 'error']),
+            "warnings": len([i for i in issues if i['severity'] == 'warning']),
+            "info": len([i for i in issues if i['severity'] == 'info'])
+        }
+    
+    except Exception as e:
+        logger.error(f"Error validando subtítulo: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        if os.path.exists(tmp_path):
+            os.unlink(tmp_path)
 
 
 @app.websocket("/ws")
