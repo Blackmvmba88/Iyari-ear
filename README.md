@@ -8,6 +8,22 @@
 
 <div align="center">
 
+## 📱 Visualización de la Aplicación
+
+<!-- TODO: Reemplazar esta imagen placeholder con una foto real -->
+<!-- Ver PASO_3_GUIA_IMAGEN.md para instrucciones de cómo generar la imagen -->
+<!-- Debe mostrar: Un celular sobre la mesa con subtítulos en pantalla -->
+
+![Iyari-ear Demo - Subtítulos en tiempo real](https://via.placeholder.com/800x450/2a2a2a/00ff9f?text=Iyari-ear+%7C+Subtítulos+en+Tiempo+Real)
+
+*Subtítulos en tiempo real en tu celular. Sin fricción. Solo conexión.*
+
+</div>
+
+---
+
+<div align="center">
+
 ```text
 📱 Un celular sobre la mesa
 🗣️ Alguien habla
