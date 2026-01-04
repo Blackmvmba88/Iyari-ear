@@ -1,0 +1,408 @@
+/* Reset y configuración base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    overflow: hidden;
+}
+
+body {
+    /* Tema oscuro suave y profesional */
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    color: #e8e8e8;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+/* Contenedor principal de la aplicación */
+#app-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px;
+    position: relative;
+}
+
+/* Contenedor de subtítulos - Elemento principal accesible */
+#subtitles-container {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow-y: auto;
+    border: 3px solid transparent;
+    border-radius: 16px;
+    /* Fondo oscuro suave con sutil transparencia */
+    background: rgba(30, 30, 45, 0.85);
+    backdrop-filter: blur(10px);
+    padding: 40px;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 32px rgba(0, 255, 159, 0.1);
+    /* Borde con acento rainbow sutil */
+    border-image: linear-gradient(135deg, 
+        rgba(255, 0, 128, 0.3),
+        rgba(0, 255, 159, 0.3),
+        rgba(0, 191, 255, 0.3)
+    ) 1;
+    transition: all 0.3s ease;
+}
+
+/* Animación pulse cuando detecta voz */
+#subtitles-container.listening {
+    animation: pulse-border 2s ease-in-out infinite;
+    border-color: #00ff9f;
+}
+
+@keyframes pulse-border {
+    0%, 100% {
+        box-shadow: 0 8px 32px rgba(0, 255, 159, 0.2);
+        border-color: rgba(0, 255, 159, 0.5);
+    }
+    50% {
+        box-shadow: 0 8px 32px rgba(0, 255, 159, 0.6);
+        border-color: rgba(0, 255, 159, 1);
+    }
+}
+
+#subtitles {
+    /* Texto ultra legible y grande */
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    line-height: 1.6;
+    color: #ffffff;
+    word-break: break-word;
+    margin: 0;
+    font-weight: 600;
+    /* Sombra sutil para mejor legibilidad */
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    letter-spacing: 0.5px;
+}
+
+/* Barra de estado con indicadores */
+#status-bar {
+    min-height: 40px;
+    font-size: 1.1rem;
+    color: #b0b0b0;
+    padding: 10px;
+    background: rgba(30, 30, 45, 0.6);
+    border-radius: 12px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+#status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Indicador de estado con color */
+#status::before {
+    content: "●";
+    font-size: 1.5rem;
+    color: #888;
+    animation: none;
+}
+
+#status.active::before {
+    color: #00ff9f;
+    animation: pulse-dot 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+}
+
+/* Indicadores de calidad (para futura implementación) */
+.quality-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.9rem;
+    color: #888;
+}
+
+.quality-bar {
+    width: 60px;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.quality-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #ff0080, #00ff9f, #00bfff);
+    transition: width 0.3s ease;
+}
+
+/* Controles */
+.control-group {
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    font-size: 1.1rem;
+}
+
+.control-group label {
+    color: #d0d0d0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.control-group label:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+}
+
+.control-group input[type="checkbox"] {
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    accent-color: #00ff9f;
+}
+
+.control-group select {
+    background: rgba(30, 30, 45, 0.8);
+    color: #ffffff;
+    border: 2px solid rgba(0, 255, 159, 0.3);
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-family: inherit;
+    font-size: 1rem;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.control-group select:hover {
+    border-color: rgba(0, 255, 159, 0.6);
+    background: rgba(30, 30, 45, 1);
+}
+
+.control-group select:focus {
+    border-color: #00ff9f;
+    box-shadow: 0 0 0 3px rgba(0, 255, 159, 0.2);
+}
+
+#controls {
+    min-height: 140px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Botón principal con efecto rainbow sutil */
+#toggle-btn {
+    background: linear-gradient(135deg, #00ff9f 0%, #00bfff 100%);
+    color: #1a1a2e;
+    border: none;
+    border-radius: 50%;
+    width: 140px;
+    height: 140px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 1.4rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 8px 32px rgba(0, 255, 159, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Efecto de brillo en hover */
+#toggle-btn::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        transparent, 
+        rgba(255, 255, 255, 0.3), 
+        transparent
+    );
+    transition: left 0.5s ease;
+}
+
+#toggle-btn:hover::before {
+    left: 100%;
+}
+
+#toggle-btn:hover {
+    transform: translateY(-4px) scale(1.05);
+    box-shadow: 0 12px 40px rgba(0, 255, 159, 0.5);
+}
+
+#toggle-btn:active {
+    transform: translateY(-2px) scale(1.02);
+}
+
+#toggle-btn.recording {
+    background: linear-gradient(135deg, #ff0080 0%, #ff4040 100%);
+    color: #ffffff;
+    box-shadow: 0 8px 32px rgba(255, 0, 128, 0.4);
+    animation: pulse-recording 2s ease-in-out infinite;
+}
+
+@keyframes pulse-recording {
+    0%, 100% {
+        box-shadow: 0 8px 32px rgba(255, 0, 128, 0.4);
+    }
+    50% {
+        box-shadow: 0 8px 40px rgba(255, 0, 128, 0.7);
+    }
+}
+
+#toggle-btn.recording:hover {
+    box-shadow: 0 12px 40px rgba(255, 0, 128, 0.6);
+}
+
+/* Modo alto contraste (activable via checkbox) */
+body.high-contrast {
+    background: #000000;
+}
+
+body.high-contrast #subtitles-container {
+    background: #000000;
+    border: 4px solid #ffff00;
+}
+
+body.high-contrast #subtitles {
+    color: #ffff00;
+    font-weight: 700;
+    text-shadow: none;
+}
+
+body.high-contrast .control-group select,
+body.high-contrast .control-group label {
+    background: #000000;
+    border-color: #ffff00;
+    color: #ffff00;
+}
+
+/* Modo rainbow (activable via checkbox) */
+body.rainbow-mode #subtitles {
+    /* Fallback color for browsers without background-clip support */
+    color: #00ff9f;
+    background: linear-gradient(90deg, 
+        #ff0080, #ff8c00, #ffff00, 
+        #00ff00, #00bfff, #8b00ff
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: rainbow-flow 3s linear infinite;
+}
+
+/* Fallback for browsers without background-clip support */
+@supports not (background-clip: text) {
+    body.rainbow-mode #subtitles {
+        color: #00ff9f;
+        background: none;
+    }
+}
+
+@keyframes rainbow-flow {
+    0% { background-position: 0% center; }
+    100% { background-position: 200% center; }
+}
+
+/* Responsive design para móviles */
+@media (max-width: 768px) {
+    #app-container {
+        padding: 15px;
+    }
+
+    #subtitles-container {
+        padding: 25px 20px;
+    }
+
+    #subtitles {
+        font-size: clamp(1.5rem, 4vw, 2.5rem);
+    }
+
+    #toggle-btn {
+        width: 120px;
+        height: 120px;
+        font-size: 1.2rem;
+    }
+
+    .control-group {
+        font-size: 1rem;
+    }
+
+    #status-bar {
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 480px) {
+    #toggle-btn {
+        width: 100px;
+        height: 100px;
+        font-size: 1.1rem;
+    }
+
+    .control-group label {
+        padding: 6px 12px;
+        font-size: 0.9rem;
+    }
+}
+
+/* Animación de carga inicial */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#app-container {
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* Accesibilidad: focus visible */
+*:focus-visible {
+    outline: 3px solid #00ff9f;
+    outline-offset: 2px;
+}
+
+/* Mejora de contraste para mejor lectura */
+::selection {
+    background: rgba(0, 255, 159, 0.3);
+    color: #ffffff;
+}

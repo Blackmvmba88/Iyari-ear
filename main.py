@@ -1,61 +1,3 @@
-# Visualización viva de audio en tiempo real
-import numpy as np
-import matplotlib.pyplot as plt
-import sounddevice as sd
-
-fs = 44100  # Frecuencia de muestreo
-duration = 0.05  # Duración de cada bloque en segundos
-
-fig, ax = plt.subplots()
-line, = ax.plot([], [], linewidth=2)
-ax.set_xlim(0, int(fs * duration))
-ax.set_ylim(-1, 1)
-ax.set_title('Audio en tiempo real - Colores electromagnéticos')
-ax.set_xlabel('Muestras')
-ax.set_ylabel('Amplitud')
-
-def update_plot(indata):
-    y = indata[:, 0]
-    x = np.arange(len(y))
-    # Color según amplitud media
-    amp = np.abs(y).mean()
-    color = plt.cm.rainbow(amp)
-    line.set_data(x, y)
-    line.set_color(color)
-    fig.canvas.draw()
-    fig.canvas.flush_events()
-
-def audio_callback(indata, frames, time, status):
-    if status:
-        print(status)
-    update_plot(indata)
-
-plt.ion()
-with sd.InputStream(channels=1, samplerate=fs, blocksize=int(fs * duration), callback=audio_callback):
-    print('Presiona Ctrl+C para salir')
-    while True:
-        plt.pause(0.01)
-# Onda sinusoidal con línea arcoíris
-import numpy as np
-import matplotlib.pyplot as plt
-
-# Parámetros de la onda
-amplitud = 1
-frecuencia = 1
-fase = 0
-t = np.linspace(0, 2 * np.pi, 500)
-y = amplitud * np.sin(frecuencia * t + fase)
-
-# Graficar con línea arcoíris
-colores = plt.cm.rainbow(np.linspace(0, 1, len(t)-1))
-for i in range(len(t)-1):
-    plt.plot(t[i:i+2], y[i:i+2], color=colores[i], linewidth=2)
-
-plt.title('Onda Sinusoidal - Línea Rainbow')
-plt.xlabel('Tiempo')
-plt.ylabel('Amplitud')
-plt.grid(True)
-plt.show()
 import asyncio
 import speech_recognition as sr
 import io
@@ -96,6 +38,7 @@ active_connections = 0
 # Verificar que los directorios existan antes de montar
 js_dir = os.path.abspath("js")
 styles_dir = os.path.abspath("styles")
+apps_dir = os.path.abspath("apps")
 
 if os.path.isdir(js_dir):
     app.mount("/js", StaticFiles(directory=js_dir), name="js")
@@ -106,6 +49,11 @@ if os.path.isdir(styles_dir):
     app.mount("/styles", StaticFiles(directory=styles_dir), name="styles")
 else:
     logger.warning(f"Directorio 'styles' no encontrado en: {styles_dir}")
+
+if os.path.isdir(apps_dir):
+    app.mount("/apps", StaticFiles(directory=apps_dir), name="apps")
+else:
+    logger.warning(f"Directorio 'apps' no encontrado en: {apps_dir}")
 
 # Inicializar el reconocedor de voz
 r = sr.Recognizer()
