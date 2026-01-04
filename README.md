@@ -1,6 +1,43 @@
-# Subtítulos en Tiempo Real
+# 🎤 Iyari-ear
 
-Esta es una aplicación web sencilla para generar subtítulos en tiempo real. Captura audio desde el micrófono del navegador, lo envía a un servidor backend que lo transcribe a texto, y muestra los subtítulos en la pantalla.
+> **Subtítulos en tiempo real para que nadie se quede fuera de la conversación.**
+
+*Creado con cariño para una amiga.*
+
+---
+
+<div align="center">
+
+```
+📱 Un celular sobre la mesa
+🗣️ Alguien habla
+✨ Las palabras aparecen
+
+Sin ruido. Sin fricción. Solo conexión.
+```
+
+</div>
+
+---
+
+## Pruébalo en 60 segundos ⚡
+
+```bash
+# 1. Inicia el backend
+pip install -r requirements.txt && python main.py
+
+# 2. Abre el navegador
+# Visita: http://localhost:8000
+
+# 3. Habla → ve el texto
+# ¡Eso es todo!
+```
+
+---
+
+## ¿Qué es esto? 💡
+
+Una aplicación web sencilla para generar subtítulos en tiempo real. Captura audio desde el micrófono del navegador, lo envía a un servidor backend que lo transcribe a texto, y muestra los subtítulos en la pantalla.
 
 Es una herramienta pensada para ayudar a personas con dificultades auditivas en conversaciones cara a cara, usando un celular o una tablet como pantalla de apoyo.
 
@@ -60,6 +97,18 @@ La conversación aparece como subtítulos grandes y claros:
 La tecnología desaparece.
 Solo queda la conversación.
 
+## Por qué existe esto ❤️
+
+**"Creado con cariño para una amiga."**
+
+Iyari-ear no es un producto. Es una herramienta de empatía.
+
+- Ayudar a escuchar sin invadir.
+- Apoyar sin vigilar.
+- Mostrar palabras, no juzgar voces.
+
+La tecnología al servicio de la conexión humana.
+
 ## Flujo de la Aplicación 🔄
 
 ```
@@ -96,14 +145,6 @@ Es una herramienta de apoyo, no de control.
 - **No está pensada para transcripción legal o forense**
 
 Estas limitaciones son parte del diseño ético del proyecto.
-
-## Diseño Ético ❤️
-
-Iyari-ear fue creada con una intención clara:
-
-- Ayudar a escuchar sin invadir.
-- Apoyar sin vigilar.
-- Mostrar palabras, no juzgar voces.
 
 ## Requisitos
 
@@ -177,6 +218,3 @@ sudo apt-get update && sudo apt-get install -y portaudio19-dev
 ```
 
 Después de instalarlo, vuelve a ejecutar `pip install -r requirements.txt`.
-
----
-*Creado con cariño para una amiga.*
