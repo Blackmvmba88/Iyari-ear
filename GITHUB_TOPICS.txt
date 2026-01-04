@@ -18,7 +18,7 @@ Topics to add:
 
 How to add topics:
 1. Go to the repository page on GitHub
-2. Click on the ⚙️ (gear icon) next to "About" on the right side
+2. Click on the settings icon (gear) next to "About" on the right side
 3. Add the topics listed above in the "Topics" field
 4. Add the manifesto as the repository description:
    "Subtítulos en tiempo real para que nadie se quede fuera de la conversación."

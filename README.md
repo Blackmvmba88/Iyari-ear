@@ -8,7 +8,7 @@
 
 <div align="center">
 
-```
+```text
 📱 Un celular sobre la mesa
 🗣️ Alguien habla
 ✨ Las palabras aparecen
@@ -24,7 +24,8 @@ Sin ruido. Sin fricción. Solo conexión.
 
 ```bash
 # 1. Inicia el backend
-pip install -r requirements.txt && python main.py
+pip install -r requirements.txt
+python main.py
 
 # 2. Abre el navegador
 # Visita: http://localhost:8000
