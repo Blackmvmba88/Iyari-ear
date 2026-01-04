@@ -2,7 +2,15 @@
 
 ## 📦 Archivos Creados
 
-### 1. **GUIA_IDENTIDAD_REPO.md** (8.2 KB)
+### 1. **INICIO_RAPIDO.md** (2.9 KB)
+   - **Propósito:** Guía de inicio inmediato (15 minutos)
+   - **Contenido:**
+     - Pasos 1 y 2 simplificados
+     - Enlaces a documentación detallada
+     - Tabla de atajos directos
+   - **Uso:** Primera lectura para empezar rápido
+
+### 2. **GUIA_IDENTIDAD_REPO.md** (8.2 KB)
    - **Propósito:** Guía maestra que une todos los 4 pasos
    - **Contenido:** 
      - Resumen de pasos con tiempos estimados
@@ -12,7 +20,7 @@
      - Preguntas frecuentes
    - **Uso:** Punto de entrada principal para implementar los cambios
 
-### 2. **PASO_1_CONFIGURACION_GITHUB.md** (1.6 KB)
+### 3. **PASO_1_CONFIGURACION_GITHUB.md** (1.6 KB)
    - **Propósito:** Instrucciones para configurar descripción y topics en GitHub
    - **Contenido:**
      - Descripción exacta a copiar: "Subtítulos en tiempo real para conversaciones cara a cara. Accesibilidad simple, ética y humana."
@@ -20,7 +28,7 @@
      - Paso a paso con screenshots conceptuales
    - **Tiempo:** 5 minutos
 
-### 3. **RELEASE_NOTES_v0.1.md** (3.1 KB)
+### 4. **RELEASE_NOTES_v0.1.md** (3.1 KB)
    - **Propósito:** Contenido completo para el primer release
    - **Contenido:**
      - Título: "v0.1 — First Listening"
@@ -31,7 +39,7 @@
      - Instrucciones de instalación
    - **Uso:** Copiar y pegar al crear el release en GitHub
 
-### 4. **PASO_3_GUIA_IMAGEN.md** (4.7 KB)
+### 5. **PASO_3_GUIA_IMAGEN.md** (4.7 KB)
    - **Propósito:** Guía completa para generar la imagen demostrativa
    - **Contenido:**
      - Descripción visual detallada
@@ -42,7 +50,7 @@
      - Checklist de calidad
    - **Tiempo:** 30 minutos
 
-### 5. **ISSUE_TEMPLATE_HISTORIAS_REALES.md** (2.7 KB)
+### 6. **ISSUE_TEMPLATE_HISTORIAS_REALES.md** (2.7 KB)
    - **Propósito:** Template para el Issue de casos reales
    - **Contenido:**
      - Título: "Casos reales donde Iyari-ear te ayudaría"
@@ -51,6 +59,15 @@
      - Reglas del espacio (qué sí y qué no)
      - Invitación a participar
    - **Uso:** Crear un Issue en GitHub y fijarlo (pin)
+
+### 7. **RESUMEN_CAMBIOS.md** (6.1 KB)
+   - **Propósito:** Resumen ejecutivo de todos los cambios
+   - **Contenido:**
+     - Lista de archivos creados y modificados
+     - Guía de uso de la documentación
+     - Lo que está listo vs lo que falta
+     - Impacto esperado
+   - **Uso:** Referencia rápida para entender qué se implementó
 
 ## 📝 Archivos Modificados
 
