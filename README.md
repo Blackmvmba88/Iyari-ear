@@ -8,6 +8,21 @@
 
 <div align="center">
 
+## 📱 Visualización de la Aplicación
+
+<!-- Imagen demostrativa: Un celular sobre la mesa mostrando subtítulos en tiempo real -->
+<!-- Fondo neutro, texto apareciendo en pantalla -->
+
+![Iyari-ear Demo](https://via.placeholder.com/800x450/1a1a1a/00ff9f?text=📱+Un+celular+sobre+la+mesa+%7C+🗣️+Alguien+habla+%7C+✨+Las+palabras+aparecen)
+
+*Subtítulos en tiempo real en tu celular. Sin fricción. Solo conexión.*
+
+</div>
+
+---
+
+<div align="center">
+
 ```text
 📱 Un celular sobre la mesa
 🗣️ Alguien habla
