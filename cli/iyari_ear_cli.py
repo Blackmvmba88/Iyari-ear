@@ -10,6 +10,7 @@ import subprocess
 import socket
 import webbrowser
 from pathlib import Path
+from typing import Optional
 
 # Constants
 MAX_MICROPHONES_TO_DISPLAY = 5
@@ -227,6 +228,131 @@ def start_server(host: str = "127.0.0.1", port: int = 8000, open_browser: bool =
         return False
 
 
+def process_subtitle_cli(input_file: str, output_file: Optional[str] = None,
+                         validate: bool = True, optimize: bool = True,
+                         format: Optional[str] = None):
+    """Procesa un archivo de subtítulos desde CLI"""
+    print("🎬 Procesando Subtítulos")
+    print("=" * 50)
+    
+    # Verificar que existe el archivo
+    if not os.path.exists(input_file):
+        print(f"❌ Archivo no encontrado: {input_file}")
+        return False
+    
+    print(f"📄 Archivo de entrada: {input_file}")
+    
+    try:
+        # Importar módulo de subtítulos
+        import sys
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)) + '/..')
+        from subtitle_processor import process_subtitle_file
+        
+        # Procesar archivo
+        success, results = process_subtitle_file(
+            input_file,
+            output_file,
+            validate=validate,
+            optimize=optimize,
+            output_format=format
+        )
+        
+        if not success:
+            print("❌ Error al procesar archivo")
+            return False
+        
+        # Mostrar resultados
+        print(f"\n✅ Procesamiento completado")
+        stats = results['stats']
+        print(f"   Subtítulos: {stats['total']}")
+        print(f"   Duración total: {stats['total_duration']:.2f}s")
+        print(f"   Duración promedio: {stats['avg_duration']:.0f}ms")
+        
+        if validate:
+            issues = results['validation_issues']
+            if issues:
+                print(f"\n⚠️  Problemas encontrados: {len(issues)}")
+                errors = [i for i in issues if i['severity'] == 'error']
+                warnings = [i for i in issues if i['severity'] == 'warning']
+                infos = [i for i in issues if i['severity'] == 'info']
+                
+                if errors:
+                    print(f"   ❌ Errores: {len(errors)}")
+                if warnings:
+                    print(f"   ⚠️  Advertencias: {len(warnings)}")
+                if infos:
+                    print(f"   ℹ️  Info: {len(infos)}")
+            else:
+                print("\n✅ No se encontraron problemas")
+        
+        if optimize:
+            changes = results['optimization_changes']
+            if changes > 0:
+                print(f"\n🔧 Optimizaciones aplicadas: {changes}")
+            else:
+                print("\n✅ No se requirieron optimizaciones")
+        
+        if output_file and results['saved']:
+            print(f"\n💾 Archivo guardado: {output_file}")
+        
+        return True
+        
+    except ImportError:
+        print("❌ Módulo de procesamiento de subtítulos no disponible")
+        print("   Asegúrate de estar en el directorio raíz de Iyari-ear")
+        return False
+    except Exception as e:
+        print(f"❌ Error: {e}")
+        return False
+
+
+def install_vlc_plugin():
+    """Instala el plugin de VLC"""
+    print("📦 Instalando Plugin VLC")
+    print("=" * 50)
+    
+    try:
+        import sys
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)) + '/..')
+        from vlc_plugin_generator import VLCPluginGenerator
+        
+        # Crear generador
+        generator = VLCPluginGenerator()
+        
+        # Generar plugin
+        print("\n🔨 Generando plugin...")
+        plugin_path = generator.generate_plugin()
+        print(f"✅ Plugin generado: {plugin_path}")
+        
+        # Instalar plugin
+        print("\n📥 Instalando en VLC...")
+        if generator.install_plugin(plugin_path):
+            print("✅ Plugin instalado correctamente")
+            print("\n📖 Pasos siguientes:")
+            print("   1. Reinicia VLC")
+            print("   2. Inicia el servidor: iyari-ear start")
+            print("   3. Reproduce un video con subtítulos en VLC")
+            print("   4. Los subtítulos se optimizarán automáticamente")
+            return True
+        else:
+            print("⚠️  No se pudo instalar automáticamente")
+            print("\n📖 Instalación manual:")
+            print(f"   1. Copia el archivo: {plugin_path}")
+            
+            # Mostrar directorio de destino
+            vlc_dir = generator._get_vlc_plugin_dir()
+            print(f"   2. Al directorio: {vlc_dir}")
+            print("   3. Reinicia VLC")
+            return False
+            
+    except ImportError:
+        print("❌ Módulo VLC plugin generator no disponible")
+        return False
+    except Exception as e:
+        print(f"❌ Error: {e}")
+        return False
+
+
 def main():
     """Función principal del CLI"""
     parser = argparse.ArgumentParser(
@@ -239,6 +365,8 @@ Ejemplos:
   iyari-ear start --host 0.0.0.0  # Accesible desde red local
   iyari-ear start --port 8080   # Usar puerto diferente
   iyari-ear test-mic            # Probar micrófono
+  iyari-ear process-subtitle input.srt output.srt  # Optimizar subtítulos
+  iyari-ear install-vlc-plugin  # Instalar plugin VLC
 
 Para más información: https://github.com/Blackmvmba88/Iyari-ear
         """
@@ -261,6 +389,22 @@ Para más información: https://github.com/Blackmvmba88/Iyari-ear
     start_parser.add_argument('--no-browser', action='store_true',
                             help='No abrir el navegador automáticamente')
     
+    # Comando: process-subtitle
+    subtitle_parser = subparsers.add_parser('process-subtitle', 
+                                           help='Procesa y optimiza un archivo de subtítulos')
+    subtitle_parser.add_argument('input', help='Archivo de subtítulos de entrada (.srt, .vtt, .ass)')
+    subtitle_parser.add_argument('output', nargs='?', help='Archivo de salida (opcional)')
+    subtitle_parser.add_argument('--no-validate', action='store_true',
+                                help='No validar el archivo')
+    subtitle_parser.add_argument('--no-optimize', action='store_true',
+                                help='No optimizar el archivo')
+    subtitle_parser.add_argument('--format', choices=['srt', 'vtt'],
+                                help='Formato de salida (default: mismo que entrada)')
+    
+    # Comando: install-vlc-plugin
+    subparsers.add_parser('install-vlc-plugin', 
+                         help='Instala el plugin de optimización para VLC')
+    
     args = parser.parse_args()
     
     # Si no se proporciona comando, mostrar ayuda
@@ -279,6 +423,16 @@ Para más información: https://github.com/Blackmvmba88/Iyari-ear
             port=args.port, 
             open_browser=not args.no_browser
         )
+    elif args.command == 'process-subtitle':
+        process_subtitle_cli(
+            input_file=args.input,
+            output_file=args.output,
+            validate=not args.no_validate,
+            optimize=not args.no_optimize,
+            format=args.format
+        )
+    elif args.command == 'install-vlc-plugin':
+        install_vlc_plugin()
 
 
 if __name__ == '__main__':

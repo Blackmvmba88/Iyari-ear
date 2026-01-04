@@ -113,6 +113,9 @@ Es una herramienta pensada para ayudar a personas con dificultades auditivas en 
 - 🪟 **Ejecutable Windows**: Doble-click y listo
 - 🤖 **Soporte Android**: Via Termux o PWA
 - 🐧 **Servicio Linux**: systemd para auto-inicio
+- 🎬 **Optimizador de Subtítulos**: Valida y optimiza archivos de subtítulos (SRT, VTT, ASS)
+- 🎮 **Plugin VLC**: Integración con VLC Media Player para optimización automática
+- 🌐 **API REST**: Endpoints para procesamiento de subtítulos vía HTTP
 
 ## Cómo funciona
 
@@ -199,6 +202,38 @@ Subtítulos en pantalla
 ```
 
 Todo ocurre en segundos.
+
+## Optimización de Subtítulos 🎬
+
+Iyari-ear ahora incluye un potente sistema de optimización de subtítulos que mejora la legibilidad y compatibilidad de archivos de subtítulos.
+
+### Características del Optimizador
+
+- ✅ **Validación automática**: Detecta problemas de timing, superposiciones y formato
+- 🔧 **Optimización inteligente**: Corrige duraciones, divide líneas largas, ajusta espaciado
+- 📁 **Múltiples formatos**: Soporta SRT, VTT, ASS/SSA
+- 🎮 **Plugin VLC**: Integración directa con VLC Media Player
+- 🌐 **Interfaz web**: Interfaz drag-and-drop en el navegador
+- 💻 **CLI potente**: Procesamiento por lotes desde línea de comandos
+- 🔌 **API REST**: Integración con otros sistemas
+
+### Uso Rápido
+
+```bash
+# Optimizar subtítulos desde CLI
+iyari-ear process-subtitle pelicula.srt pelicula.optimized.srt
+
+# Instalar plugin para VLC
+iyari-ear install-vlc-plugin
+
+# Acceder a interfaz web
+# Visita: http://localhost:8000/subtitle-optimizer
+```
+
+### Documentación Completa
+
+- 📖 [Guía de Optimización de Subtítulos](docs/SUBTITLE_OPTIMIZATION.md)
+- 🎮 [Guía del Plugin VLC](docs/VLC_PLUGIN_GUIDE.md)
 
 ## Qué Iyari-ear NO es 🚫
 
