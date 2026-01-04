@@ -234,7 +234,7 @@ class SubtitleProcessor:
         text = text.replace('\\n', '\n')
         return text.strip()
     
-    def validate(self) -> List[Dict[str, any]]:
+    def validate(self) -> List[Dict[str, Any]]:
         """Valida los subtítulos y retorna lista de problemas"""
         issues = []
         

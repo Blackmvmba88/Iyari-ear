@@ -272,6 +272,9 @@ async def validate_subtitle_endpoint(file: UploadFile = File(...)):
     """
     Valida un archivo de subtítulos sin modificarlo
     
+    Note: Uses POST (not GET) because it accepts file uploads,
+    following RESTful conventions for requests with body content.
+    
     Args:
         file: Archivo de subtítulos a validar
     
