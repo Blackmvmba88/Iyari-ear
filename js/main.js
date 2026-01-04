@@ -1,9 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
     // Elementos del DOM
     const subtitlesElement = document.getElementById('subtitles');
+    const subtitlesContainer = document.getElementById('subtitles-container');
     const statusElement = document.getElementById('status');
     const toggleBtn = document.getElementById('toggle-btn');
     const languageSelect = document.getElementById('language-select');
+    const rainbowModeCheckbox = document.getElementById('rainbow-mode');
+    const highContrastCheckbox = document.getElementById('high-contrast-mode');
 
     // Verificar que los elementos existan
     if (!subtitlesElement || !statusElement || !toggleBtn || !languageSelect) {
@@ -46,6 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
         socket.onopen = () => {
             console.log('WebSocket conectado.');
             statusElement.textContent = 'Estado: Listo para iniciar';
+            statusElement.classList.remove('active');
             reconnectAttempts = 0; // Reset reconnect counter on successful connection
             
             // Send initial language preference
@@ -60,6 +64,13 @@ document.addEventListener('DOMContentLoaded', () => {
             if (event.data) {
                 console.log('Texto recibido:', event.data);
                 subtitlesElement.textContent = event.data;
+                // Activar animación de pulse cuando llega texto
+                if (subtitlesContainer) {
+                    subtitlesContainer.classList.add('listening');
+                    setTimeout(() => {
+                        subtitlesContainer.classList.remove('listening');
+                    }, 2000);
+                }
             }
         };
 
@@ -117,6 +128,10 @@ document.addEventListener('DOMContentLoaded', () => {
             isRecording = true;
             updateButton();
             statusElement.textContent = 'Estado: Escuchando...';
+            statusElement.classList.add('active');
+            if (subtitlesContainer) {
+                subtitlesContainer.classList.add('listening');
+            }
 
             mediaRecorder = new MediaRecorder(stream);
 
@@ -173,6 +188,10 @@ document.addEventListener('DOMContentLoaded', () => {
         isRecording = false;
         updateButton();
         statusElement.textContent = 'Estado: Inactivo';
+        statusElement.classList.remove('active');
+        if (subtitlesContainer) {
+            subtitlesContainer.classList.remove('listening');
+        }
     }
 
     function updateButton() {
@@ -217,6 +236,32 @@ document.addEventListener('DOMContentLoaded', () => {
             subtitlesElement.textContent = `Idioma cambiado a: ${language === 'es-ES' ? 'Español' : 'English'}`;
         }
     });
+
+    // Modo Arcoíris
+    if (rainbowModeCheckbox) {
+        rainbowModeCheckbox.addEventListener('change', () => {
+            if (rainbowModeCheckbox.checked) {
+                document.body.classList.add('rainbow-mode');
+                console.log('Modo arcoíris activado');
+            } else {
+                document.body.classList.remove('rainbow-mode');
+                console.log('Modo arcoíris desactivado');
+            }
+        });
+    }
+
+    // Modo Alto Contraste
+    if (highContrastCheckbox) {
+        highContrastCheckbox.addEventListener('change', () => {
+            if (highContrastCheckbox.checked) {
+                document.body.classList.add('high-contrast');
+                console.log('Modo alto contraste activado');
+            } else {
+                document.body.classList.remove('high-contrast');
+                console.log('Modo alto contraste desactivado');
+            }
+        });
+    }
 
     // Limpiar al cerrar la página
     window.addEventListener('beforeunload', () => {

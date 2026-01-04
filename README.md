@@ -4,6 +4,49 @@
 
 *Creado con cariño para una amiga.*
 
+**Ahora disponible como aplicación multiplataforma** 🚀
+
+[![Platform Support](https://img.shields.io/badge/platforms-Windows%20%7C%20Linux%20%7C%20macOS%20%7C%20Android-blue)]()
+[![PWA Ready](https://img.shields.io/badge/PWA-Ready-green)]()
+[![Python](https://img.shields.io/badge/python-3.7+-blue)]()
+
+---
+
+## 🚀 Instalación Rápida
+
+### Opción 1: PWA (Recomendado) - Funciona en todos los dispositivos
+
+```bash
+# 1. Inicia el servidor
+pip install -r requirements.txt
+python main.py
+
+# 2. Abre Chrome/Edge en: http://localhost:8000
+# 3. Click en "Instalar" (ícono ➕ en la barra de direcciones)
+# 4. ¡Listo! Ahora tienes Iyari-ear como app
+```
+
+### Opción 2: CLI (Para usuarios técnicos)
+
+```bash
+# Instalar
+pip install -e .
+
+# Comandos disponibles
+iyari-ear doctor      # Verifica sistema
+iyari-ear test-mic    # Prueba micrófono
+iyari-ear start       # Inicia servidor
+```
+
+### Opción 3: Ver guías específicas por plataforma
+
+- **Windows**: [Ejecutable .exe](docs/PLATFORMS.md#-windows)
+- **Linux**: [Script de instalación](docs/PLATFORMS.md#-linux)
+- **Android (Termux)**: [Guía de instalación](docs/PLATFORMS.md#-android)
+- **macOS**: [Homebrew setup](docs/PLATFORMS.md#-macos)
+
+📖 **[Guía completa de instalación](docs/INSTALLATION.md)** | **[Matriz de compatibilidad](docs/PLATFORMS.md)**
+
 ---
 
 <div align="center">
@@ -39,24 +82,37 @@ Sin ruido. Sin fricción. Solo conexión.
 ## Pruébalo en 60 segundos ⚡
 
 ```bash
-# 1. Inicia el backend
+# Método 1: CLI (si ya lo instalaste)
+iyari-ear start
+
+# Método 2: Python directo
 pip install -r requirements.txt
 python main.py
 
-# 2. Abre el navegador
 # Visita: http://localhost:8000
-
-# 3. Habla → ve el texto
-# ¡Eso es todo!
+# Presiona "Iniciar" → Habla → Ve el texto
 ```
+
+**💡 Nuevo:** Instala como PWA para acceso rápido desde tu menú de apps
 
 ---
 
 ## ¿Qué es esto? 💡
 
-Una aplicación web sencilla para generar subtítulos en tiempo real. Captura audio desde el micrófono del navegador, lo envía a un servidor backend que lo transcribe a texto, y muestra los subtítulos en la pantalla.
+Una **aplicación multiplataforma** para generar subtítulos en tiempo real. Captura audio desde el micrófono del navegador, lo envía a un servidor backend que lo transcribe a texto, y muestra los subtítulos en la pantalla.
 
-Es una herramienta pensada para ayudar a personas con dificultades auditivas en conversaciones cara a cara, usando un celular o una tablet como pantalla de apoyo.
+Es una herramienta pensada para ayudar a personas con dificultades auditivas en conversaciones cara a cara, usando un celular, tablet o computadora como pantalla de apoyo.
+
+### ✨ Características Nuevas
+
+- 📱 **PWA**: Instálala como app en cualquier dispositivo
+- 🎨 **Dashboard Colorido**: Diseño profesional con modo oscuro y tema rainbow
+- 🔊 **Animación Pulse**: Indicador visual cuando detecta voz
+- ♿ **Accesibilidad**: Modo alto contraste, texto ultra legible
+- 🖥️ **CLI Completo**: Comandos `doctor`, `test-mic`, `start`
+- 🪟 **Ejecutable Windows**: Doble-click y listo
+- 🤖 **Soporte Android**: Via Termux o PWA
+- 🐧 **Servicio Linux**: systemd para auto-inicio
 
 ## Cómo funciona
 

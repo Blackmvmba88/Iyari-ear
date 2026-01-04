@@ -1,0 +1,23 @@
+[Unit]
+Description=Iyari-ear - Subtítulos en Tiempo Real
+After=network.target
+
+[Service]
+Type=simple
+User=%i
+WorkingDirectory=/home/%i/Iyari-ear
+Environment="HOST=127.0.0.1"
+Environment="PORT=8000"
+ExecStart=/usr/bin/python3 /home/%i/Iyari-ear/main.py
+Restart=on-failure
+RestartSec=5
+
+# Seguridad
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/home/%i/Iyari-ear
+
+[Install]
+WantedBy=multi-user.target

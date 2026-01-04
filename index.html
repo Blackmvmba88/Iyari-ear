@@ -3,9 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Subtítulos en Tiempo Real</title>
-    <link rel="stylesheet" href="styles/style.css">
+    <meta name="description" content="Subtítulos en tiempo real para que nadie se quede fuera de la conversación">
+    <meta name="theme-color" content="#00ff9f">
+    <title>Iyari-ear - Subtítulos en Tiempo Real</title>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/apps/pwa/manifest.json">
+    
+    <!-- Estilos -->
+    <link rel="stylesheet" href="styles/style-enhanced.css">
+    
+    <!-- Icons -->
+    <link rel="icon" type="image/png" sizes="192x192" href="/apps/pwa/icons/icon-192x192.png">
+    <link rel="apple-touch-icon" sizes="192x192" href="/apps/pwa/icons/icon-192x192.png">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='90' font-size='90'>🎤</text></svg>">
+    
+    <!-- iOS Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Iyari-ear">
 </head>
 <body>
     <div id="app-container">
@@ -29,6 +45,12 @@
         </div>
 
         <div class="control-group">
+            <label for="high-contrast-mode">
+                <input type="checkbox" id="high-contrast-mode"> Alto Contraste
+            </label>
+        </div>
+
+        <div class="control-group">
             <label for="language-select">Idioma de transcripción:</label>
             <select id="language-select">
                 <option value="es-ES">Español</option>
@@ -42,5 +64,30 @@
     </div>
 
     <script src="js/main.js"></script>
+    
+    <!-- PWA Service Worker Registration -->
+    <script>
+        // Registrar Service Worker para PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/apps/pwa/sw.js')
+                    .then(registration => {
+                        console.log('Service Worker registrado:', registration);
+                    })
+                    .catch(error => {
+                        console.log('Error al registrar Service Worker:', error);
+                    });
+            });
+        }
+
+        // Detectar si la app fue lanzada como PWA instalada
+        window.addEventListener('DOMContentLoaded', () => {
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+            if (isStandalone) {
+                console.log('App ejecutándose como PWA instalada');
+                // Opcional: Puedes agregar lógica específica para PWA
+            }
+        });
+    </script>
 </body>
 </html>
