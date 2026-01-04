@@ -306,17 +306,20 @@
     </div>
 
     <script>
-        let selectedFile = null;
-        let downloadUrl = null;
-        
-        const uploadSection = document.getElementById('uploadSection');
-        const fileInput = document.getElementById('fileInput');
-        const fileName = document.getElementById('fileName');
-        const processButton = document.getElementById('processButton');
-        const progressBar = document.getElementById('progressBar');
-        const progressFill = document.getElementById('progressFill');
-        const resultsSection = document.getElementById('resultsSection');
-        const downloadButton = document.getElementById('downloadButton');
+        (function() {
+            'use strict';
+            
+            let selectedFile = null;
+            let downloadUrl = null;
+            
+            const uploadSection = document.getElementById('uploadSection');
+            const fileInput = document.getElementById('fileInput');
+            const fileName = document.getElementById('fileName');
+            const processButton = document.getElementById('processButton');
+            const progressBar = document.getElementById('progressBar');
+            const progressFill = document.getElementById('progressFill');
+            const resultsSection = document.getElementById('resultsSection');
+            const downloadButton = document.getElementById('downloadButton');
         
         // Click to upload
         uploadSection.addEventListener('click', () => fileInput.click());
@@ -468,8 +471,9 @@
         downloadButton.addEventListener('click', () => {
             if (downloadUrl) {
                 window.location.href = downloadUrl;
-            }
+                        }
         });
+        })(); // End IIFE
     </script>
 </body>
 </html>

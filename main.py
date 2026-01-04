@@ -3,7 +3,14 @@ import speech_recognition as sr
 import io
 import json
 import uvicorn
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect, UploadFile, File, HTTPException
+from fastapi import (
+    FastAPI, 
+    WebSocket, 
+    WebSocketDisconnect, 
+    UploadFile, 
+    File, 
+    HTTPException
+)
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, JSONResponse
 from pydantic import BaseModel
@@ -260,7 +267,7 @@ async def download_subtitle(download_id: str):
     raise HTTPException(status_code=404, detail="Archivo no encontrado o expirado")
 
 
-@app.get("/api/subtitles/validate")
+@app.post("/api/subtitles/validate")
 async def validate_subtitle_endpoint(file: UploadFile = File(...)):
     """
     Valida un archivo de subtítulos sin modificarlo

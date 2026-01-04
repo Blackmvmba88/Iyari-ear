@@ -5,7 +5,7 @@ Procesa, valida y optimiza subtítulos para VLC y otros reproductores.
 """
 import re
 import os
-from typing import List, Dict, Tuple, Optional
+from typing import List, Dict, Tuple, Optional, Any
 from dataclasses import dataclass
 from datetime import timedelta
 import logging
@@ -427,7 +427,7 @@ class SubtitleProcessor:
             logger.error(f"Error al guardar archivo: {e}")
             return False
     
-    def get_stats(self) -> Dict[str, any]:
+    def get_stats(self) -> Dict[str, Any]:
         """Obtiene estadísticas de los subtítulos"""
         if not self.subtitles:
             return {
