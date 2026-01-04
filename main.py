@@ -96,6 +96,16 @@ async def read_root():
     return FileResponse(index_path)
 
 
+@app.get("/subtitle-optimizer")
+async def subtitle_optimizer_page():
+    """Sirve la página del optimizador de subtítulos."""
+    page_path = 'subtitle-optimizer.html'
+    if not os.path.isfile(page_path):
+        logger.error(f"Archivo subtitle-optimizer.html no encontrado: {page_path}")
+        return {"error": "Página no encontrada"}
+    return FileResponse(page_path)
+
+
 @app.get("/health")
 async def health_check():
     """Endpoint de salud para verificar que el servidor está funcionando."""

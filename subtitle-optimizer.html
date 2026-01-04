@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Optimizador de Subtítulos - Iyari-ear</title>
+    <link rel="stylesheet" href="styles/style-enhanced.css">
+    <style>
+        .subtitle-optimizer {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: rgba(42, 42, 42, 0.95);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 255, 159, 0.2);
+        }
+        
+        .subtitle-optimizer h1 {
+            color: #00ff9f;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2rem;
+        }
+        
+        .upload-section {
+            border: 2px dashed #00ff9f;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .upload-section:hover {
+            background: rgba(0, 255, 159, 0.05);
+            border-color: #00ffff;
+        }
+        
+        .upload-section.dragover {
+            background: rgba(0, 255, 159, 0.1);
+            border-color: #00ffff;
+            transform: scale(1.02);
+        }
+        
+        .file-input {
+            display: none;
+        }
+        
+        .upload-icon {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+        
+        .options-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+        }
+        
+        .option-group {
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .option-group label {
+            margin-left: 10px;
+            color: #fff;
+        }
+        
+        .format-selector {
+            margin: 10px 0;
+        }
+        
+        .format-selector select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #00ff9f;
+            background: rgba(0, 0, 0, 0.5);
+            color: #fff;
+            font-size: 1rem;
+        }
+        
+        .process-button {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.2rem;
+            background: linear-gradient(135deg, #00ff9f, #00ffff);
+            border: none;
+            border-radius: 8px;
+            color: #000;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 20px 0;
+        }
+        
+        .process-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(0, 255, 159, 0.5);
+        }
+        
+        .process-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .results-section {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            border-left: 4px solid #00ff9f;
+        }
+        
+        .results-section.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 8px 0;
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+        }
+        
+        .stat-label {
+            color: #00ff9f;
+        }
+        
+        .stat-value {
+            color: #fff;
+            font-weight: bold;
+        }
+        
+        .issue-list {
+            margin-top: 15px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .issue-item {
+            padding: 8px;
+            margin: 5px 0;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .issue-error {
+            border-left: 3px solid #ff4444;
+        }
+        
+        .issue-warning {
+            border-left: 3px solid #ffaa00;
+        }
+        
+        .issue-info {
+            border-left: 3px solid #4444ff;
+        }
+        
+        .download-button {
+            width: 100%;
+            padding: 12px;
+            background: #00ff9f;
+            color: #000;
+            border: none;
+            border-radius: 6px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .download-button:hover {
+            background: #00ffff;
+            transform: translateY(-2px);
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
+            margin: 10px 0;
+            display: none;
+        }
+        
+        .progress-bar.show {
+            display: block;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00ff9f, #00ffff);
+            width: 0%;
+            transition: width 0.3s ease;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+        
+        .nav-link {
+            display: inline-block;
+            margin: 10px;
+            color: #00ff9f;
+            text-decoration: none;
+            padding: 10px 20px;
+            border: 1px solid #00ff9f;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            background: rgba(0, 255, 159, 0.1);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="subtitle-optimizer">
+        <h1>🎬 Optimizador de Subtítulos</h1>
+        
+        <div class="upload-section" id="uploadSection">
+            <div class="upload-icon">📁</div>
+            <p>Arrastra un archivo de subtítulos aquí</p>
+            <p style="color: #888; font-size: 0.9rem;">o haz clic para seleccionar</p>
+            <p style="color: #888; font-size: 0.8rem; margin-top: 10px;">
+                Formatos soportados: SRT, VTT, ASS, SSA
+            </p>
+            <input type="file" id="fileInput" class="file-input" accept=".srt,.vtt,.ass,.ssa">
+        </div>
+        
+        <div id="fileName" style="text-align: center; color: #00ff9f; margin: 10px 0;"></div>
+        
+        <div class="options-section">
+            <h3 style="color: #00ff9f; margin-bottom: 15px;">Opciones de Procesamiento</h3>
+            
+            <div class="option-group">
+                <input type="checkbox" id="validateOption" checked>
+                <label for="validateOption">✅ Validar subtítulos</label>
+            </div>
+            
+            <div class="option-group">
+                <input type="checkbox" id="optimizeOption" checked>
+                <label for="optimizeOption">🔧 Optimizar automáticamente</label>
+            </div>
+            
+            <div class="format-selector">
+                <label for="formatSelect" style="color: #00ff9f;">Formato de salida:</label>
+                <select id="formatSelect">
+                    <option value="">Mismo que entrada</option>
+                    <option value="srt">SRT (SubRip)</option>
+                    <option value="vtt">VTT (WebVTT)</option>
+                </select>
+            </div>
+        </div>
+        
+        <button class="process-button" id="processButton" disabled>
+            🚀 Procesar Subtítulos
+        </button>
+        
+        <div class="progress-bar" id="progressBar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+        
+        <div class="results-section" id="resultsSection">
+            <h3 style="color: #00ff9f; margin-bottom: 15px;">📊 Resultados</h3>
+            
+            <div id="stats"></div>
+            
+            <div id="issues"></div>
+            
+            <button class="download-button" id="downloadButton" style="display: none;">
+                ⬇️ Descargar Subtítulos Optimizados
+            </button>
+        </div>
+        
+        <div style="text-align: center; margin-top: 30px;">
+            <a href="/" class="nav-link">🎤 Transcripción en Vivo</a>
+            <a href="https://github.com/Blackmvmba88/Iyari-ear" target="_blank" class="nav-link">📖 Documentación</a>
+        </div>
+    </div>
+
+    <script>
+        let selectedFile = null;
+        let downloadUrl = null;
+        
+        const uploadSection = document.getElementById('uploadSection');
+        const fileInput = document.getElementById('fileInput');
+        const fileName = document.getElementById('fileName');
+        const processButton = document.getElementById('processButton');
+        const progressBar = document.getElementById('progressBar');
+        const progressFill = document.getElementById('progressFill');
+        const resultsSection = document.getElementById('resultsSection');
+        const downloadButton = document.getElementById('downloadButton');
+        
+        // Click to upload
+        uploadSection.addEventListener('click', () => fileInput.click());
+        
+        // File selection
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFile(e.target.files[0]);
+            }
+        });
+        
+        // Drag and drop
+        uploadSection.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadSection.classList.add('dragover');
+        });
+        
+        uploadSection.addEventListener('dragleave', () => {
+            uploadSection.classList.remove('dragover');
+        });
+        
+        uploadSection.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadSection.classList.remove('dragover');
+            
+            if (e.dataTransfer.files.length > 0) {
+                handleFile(e.dataTransfer.files[0]);
+            }
+        });
+        
+        function handleFile(file) {
+            const validExtensions = ['.srt', '.vtt', '.ass', '.ssa'];
+            const fileExt = '.' + file.name.split('.').pop().toLowerCase();
+            
+            if (!validExtensions.includes(fileExt)) {
+                alert('Formato no soportado. Usa: SRT, VTT, ASS o SSA');
+                return;
+            }
+            
+            selectedFile = file;
+            fileName.textContent = `📄 ${file.name}`;
+            processButton.disabled = false;
+            resultsSection.classList.remove('show');
+        }
+        
+        // Process button
+        processButton.addEventListener('click', async () => {
+            if (!selectedFile) return;
+            
+            processButton.disabled = true;
+            processButton.textContent = '⏳ Procesando...';
+            progressBar.classList.add('show');
+            progressFill.style.width = '50%';
+            
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+            formData.append('validate', document.getElementById('validateOption').checked);
+            formData.append('optimize', document.getElementById('optimizeOption').checked);
+            
+            const format = document.getElementById('formatSelect').value;
+            if (format) {
+                formData.append('output_format', format);
+            }
+            
+            try {
+                const response = await fetch('/api/subtitles/process', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`Error ${response.status}: ${response.statusText}`);
+                }
+                
+                const result = await response.json();
+                
+                progressFill.style.width = '100%';
+                setTimeout(() => {
+                    progressBar.classList.remove('show');
+                    displayResults(result);
+                }, 500);
+                
+            } catch (error) {
+                alert(`Error al procesar: ${error.message}`);
+                console.error(error);
+            } finally {
+                processButton.disabled = false;
+                processButton.textContent = '🚀 Procesar Subtítulos';
+                progressFill.style.width = '0%';
+            }
+        });
+        
+        function displayResults(result) {
+            resultsSection.classList.add('show');
+            
+            // Display stats
+            const stats = result.stats;
+            const statsHTML = `
+                <div class="stat-item">
+                    <span class="stat-label">Total de subtítulos:</span>
+                    <span class="stat-value">${stats.total}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Duración total:</span>
+                    <span class="stat-value">${stats.total_duration.toFixed(2)}s</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Duración promedio:</span>
+                    <span class="stat-value">${stats.avg_duration.toFixed(0)}ms</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Optimizaciones aplicadas:</span>
+                    <span class="stat-value">${result.optimization_changes}</span>
+                </div>
+            `;
+            document.getElementById('stats').innerHTML = statsHTML;
+            
+            // Display issues
+            const issues = result.validation_issues;
+            if (issues && issues.length > 0) {
+                const issuesHTML = `
+                    <h4 style="color: #ffaa00; margin: 15px 0 10px 0;">
+                        ⚠️ Problemas encontrados (${issues.length})
+                    </h4>
+                    <div class="issue-list">
+                        ${issues.map(issue => `
+                            <div class="issue-item issue-${issue.severity}">
+                                ${issue.message}
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                document.getElementById('issues').innerHTML = issuesHTML;
+            } else {
+                document.getElementById('issues').innerHTML = `
+                    <p style="color: #00ff9f; margin-top: 15px;">
+                        ✅ No se encontraron problemas
+                    </p>
+                `;
+            }
+            
+            // Setup download
+            if (result.download_url) {
+                downloadUrl = result.download_url;
+                downloadButton.style.display = 'block';
+            }
+        }
+        
+        downloadButton.addEventListener('click', () => {
+            if (downloadUrl) {
+                window.location.href = downloadUrl;
+            }
+        });
+    </script>
+</body>
+</html>
