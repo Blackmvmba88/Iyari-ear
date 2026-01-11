@@ -497,7 +497,7 @@ async def upload_diagnostic_image(
     
     # Validate session_id format to prevent directory traversal
     import re
-    if not re.match(r'^session_[0-9]{8}_[0-9]{6}_[a-f0-9]{8,}$', session_id):
+    if not re.match(r'^session_[0-9]{8}_[0-9]{6}_[a-f0-9]{8,16}$', session_id):
         raise HTTPException(
             status_code=400,
             detail=f"Formato de session_id inválido: {session_id}"

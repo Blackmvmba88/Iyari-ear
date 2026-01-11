@@ -310,6 +310,19 @@ class DiagnosticEngine:
                     "(3) Capacitores de salida en cortocircuito. "
                     "El método de diagnóstico correcto es medir en cascada: VBUS → 5V → 3V3."
                 )
+            elif layer1.voltage_rail == "5V":
+                fault_cause = FaultCause.NO_VOLTAGE
+                evidence.append("Ausencia de tensión en rail 5V")
+                evidence.append("Rail 5V típicamente proviene de USB VBUS")
+                evidence.append("Topología: USB_VBUS → Protección/Fusible → 5V")
+                reasoning = (
+                    "El rail 5V generalmente proviene directamente del USB VBUS a través de "
+                    "un fusible o protección de sobrecorriente. Si 5V está ausente: "
+                    "(1) Fusible abierto por sobrecorriente, "
+                    "(2) Cable USB defectuoso, "
+                    "(3) Puerto USB dañado, "
+                    "(4) Protección activa por corto en downstream."
+                )
         
         elif self.style == DiagnosticStyle.FORENSIC:
             # FORENSE: Exhaustivo, detallista, considera todos los escenarios
@@ -336,6 +349,30 @@ class DiagnosticEngine:
                     "(D) Reflow de U1 si mediciones anteriores OK. "
                     "Si U1 está caliente en reposo, indica cortocircuito downstream. "
                     "Temperatura normal de operación: <50°C al tacto."
+                )
+            elif layer1.voltage_rail == "5V":
+                fault_cause = FaultCause.NO_VOLTAGE
+                evidence.extend([
+                    "Rail 5V ausente o significativamente bajo (<4.5V)",
+                    "USB VBUS esperado como fuente primaria",
+                    "Fusible o protección F1 visible en topología",
+                    "Traza desde conector USB a protección intacta",
+                    "Sin signos visuales de daño en componentes de protección"
+                ])
+                reasoning = (
+                    "Análisis de cadena USB completa: "
+                    "USB_CONNECTOR (pin VBUS) → F1 (Fusible) → 5V_RAIL → Reguladores downstream. "
+                    "Escenarios posibles ordenados por probabilidad: "
+                    "(1) Fusible F1 abierto por sobrecorriente previa (50%), "
+                    "(2) Cable USB defectuoso o conexión intermitente (30%), "
+                    "(3) Protección ESD/TVS en corto a tierra (15%), "
+                    "(4) Conector USB con pines dañados (5%). "
+                    "Plan de verificación: (A) Medir voltaje en pin VBUS del conector, "
+                    "(B) Verificar continuidad de fusible F1, "
+                    "(C) Medir resistencia a tierra en 5V rail (debe ser >100Ω), "
+                    "(D) Probar con fuente externa de 5V en lugar de USB. "
+                    "Si VBUS presenta voltaje pero 5V no, el problema está entre conector y rail. "
+                    "Corriente normal esperada: <500mA en reposo para placas típicas."
                 )
         
         return DiagnosticLayer2(
