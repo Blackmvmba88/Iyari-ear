@@ -284,18 +284,59 @@ class DiagnosticEngine:
         
         # Lógica de razonamiento según estilo
         if self.style == DiagnosticStyle.TECHNICIAN:
-            reasoning = "Análisis práctico basado en síntomas comunes"
+            # TÉCNICO: Directo, práctico, orientado a solución rápida
             if layer1.voltage_rail == "3V3":
                 fault_cause = FaultCause.NO_VOLTAGE
                 evidence.append("Rail 3V3 identificado")
                 evidence.append("Regulador probable: AMS1117 o similar")
-                reasoning = "Si 3V3 está ausente, probable falla en regulador de voltaje"
+                reasoning = "3V3 ausente → Regulador falló. Medir salida, revisar entrada 5V, verificar caps de salida."
+            elif layer1.voltage_rail == "5V":
+                fault_cause = FaultCause.NO_VOLTAGE
+                evidence.append("Rail 5V identificado")
+                reasoning = "Sin 5V → Verificar VBUS, fusible, protección de entrada."
         
         elif self.style == DiagnosticStyle.ENGINEER:
-            reasoning = "Análisis causal sistemático desde topología"
-            
+            # INGENIERO: Causal, metodológico, explica el por qué
+            if layer1.voltage_rail == "3V3":
+                fault_cause = FaultCause.NO_VOLTAGE
+                evidence.append("Ausencia de tensión en rail 3V3")
+                evidence.append("Regulador lineal LDO típico para este rail")
+                evidence.append("Topología: USB_5V → AMS1117 → 3V3 → RF+MCU")
+                reasoning = (
+                    "El rail 3V3 es generado por un regulador lineal (probablemente AMS1117-3.3) "
+                    "que recibe 5V de entrada. Si 3V3 está ausente, causas posibles: "
+                    "(1) Regulador dañado por sobrecorriente o ESD, "
+                    "(2) Entrada 5V ausente o insuficiente, "
+                    "(3) Capacitores de salida en cortocircuito. "
+                    "El método de diagnóstico correcto es medir en cascada: VBUS → 5V → 3V3."
+                )
+        
         elif self.style == DiagnosticStyle.FORENSIC:
-            reasoning = "Análisis detallado de todas las rutas de señal"
+            # FORENSE: Exhaustivo, detallista, considera todos los escenarios
+            if layer1.voltage_rail == "3V3":
+                fault_cause = FaultCause.NO_VOLTAGE
+                evidence.extend([
+                    "Rail 3V3 ausente o significativamente bajo (<2.8V)",
+                    "Regulador LDO serie 1117 detectado en posición U1",
+                    "Capacitor electrolítico de salida C15 (10uF) visible",
+                    "Traza de cobre desde regulador hacia módulo RF intacta",
+                    "No se observa daño térmico visible en regulador"
+                ])
+                reasoning = (
+                    "Análisis de cadena de alimentación completa: "
+                    "VBUS (USB) → Fusible/Protección → 5V_IN → U1 (AMS1117-3.3) → 3V3_OUT → Cargas. "
+                    "Escenarios posibles ordenados por probabilidad: "
+                    "(1) Falla interna del regulador U1 por stress térmico o ESD (60%), "
+                    "(2) Cortocircuito en rail 3V3 por componente downstream (25%), "
+                    "(3) Entrada 5V_IN insuficiente por caída en USB o fusible abierto (10%), "
+                    "(4) Soldadura fría en pines del regulador (5%). "
+                    "Plan de verificación: (A) Medir 5V_IN en pin 1 de U1, "
+                    "(B) Desconectar cargas 3V3 y remedir salida, "
+                    "(C) Medir resistencia a tierra en rail 3V3, "
+                    "(D) Reflow de U1 si mediciones anteriores OK. "
+                    "Si U1 está caliente en reposo, indica cortocircuito downstream. "
+                    "Temperatura normal de operación: <50°C al tacto."
+                )
         
         return DiagnosticLayer2(
             fault_cause=fault_cause,

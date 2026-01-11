@@ -415,6 +415,134 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     /**
+     * Run Demo - ESP32 3V3 Failure
+     */
+    const runDemoBtn = document.getElementById('run-demo-btn');
+    if (runDemoBtn) {
+        runDemoBtn.addEventListener('click', async () => {
+            try {
+                // Reset state
+                currentSessionId = null;
+                uploadedImages = [];
+                diagnosticResults = null;
+                imagesPreview.innerHTML = '';
+                diagnosisArea.innerHTML = '';
+                reportSection.style.display = 'none';
+                
+                // Set demo values
+                boardModelInput.value = 'ESP32-DevKit';
+                diagnosticStyleSelect.value = 'técnico';
+                
+                runDemoBtn.disabled = true;
+                runDemoBtn.textContent = '🔄 Ejecutando demo...';
+                
+                // Step 1: Create session
+                const sessionResponse = await fetch(`${API_BASE}/api/diagnostic/session`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        board_model: 'ESP32-DevKit',
+                        diagnostic_style: 'técnico'
+                    })
+                });
+                
+                if (!sessionResponse.ok) {
+                    throw new Error('Error al crear sesión de demo');
+                }
+                
+                const sessionData = await sessionResponse.json();
+                currentSessionId = sessionData.session_id;
+                
+                showMessage('✅ Demo iniciado - Sesión: ' + currentSessionId, 'success');
+                createSessionBtn.textContent = '✓ Sesión Demo Activa';
+                createSessionBtn.style.background = 'linear-gradient(135deg, #00ff9f 0%, #00d4ff 100%)';
+                
+                // Step 2: Simulate image upload (create a dummy image)
+                diagnosisArea.innerHTML = '';
+                showProgressMessage('📸 Simulando captura de imágenes...', diagnosisArea);
+                
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                // Create a simple canvas image for demo
+                const canvas = document.createElement('canvas');
+                canvas.width = 400;
+                canvas.height = 300;
+                const ctx = canvas.getContext('2d');
+                ctx.fillStyle = '#1a1a2e';
+                ctx.fillRect(0, 0, 400, 300);
+                ctx.fillStyle = '#ff6b00';
+                ctx.font = 'bold 24px Arial';
+                ctx.fillText('ESP32-DevKit', 100, 150);
+                ctx.font = '18px Arial';
+                ctx.fillText('3V3 Rail - Demo', 100, 180);
+                
+                canvas.toBlob(async (blob) => {
+                    const file = new File([blob], 'demo_esp32_frontal.png', { type: 'image/png' });
+                    
+                    // Upload demo image
+                    const formData = new FormData();
+                    formData.append('file', file);
+                    formData.append('session_id', currentSessionId);
+                    formData.append('image_type', 'frontal');
+                    
+                    const uploadResponse = await fetch(`${API_BASE}/api/diagnostic/upload`, {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    if (!uploadResponse.ok) {
+                        throw new Error('Error al subir imagen de demo');
+                    }
+                    
+                    const uploadData = await uploadResponse.json();
+                    uploadedImages.push({
+                        id: uploadData.image_id,
+                        type: 'frontal',
+                        file: file,
+                        url: URL.createObjectURL(file)
+                    });
+                    
+                    addImagePreview(file, 'frontal');
+                    showProgressMessage('✅ Imagen frontal cargada', diagnosisArea);
+                    
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                    
+                    // Step 3: Start analysis
+                    showProgressMessage('🔍 Iniciando análisis de diagnóstico...', diagnosisArea);
+                    
+                    const analyzeResponse = await fetch(`${API_BASE}/api/diagnostic/analyze`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            session_id: currentSessionId
+                        })
+                    });
+                    
+                    if (!analyzeResponse.ok) {
+                        throw new Error('Error al analizar demo');
+                    }
+                    
+                    // Connect WebSocket for real-time updates
+                    connectDiagnosticWebSocket();
+                    
+                    runDemoBtn.textContent = '✓ Demo Completo';
+                    runDemoBtn.disabled = false;
+                }, 'image/png');
+                
+            } catch (error) {
+                console.error('Error en demo:', error);
+                alert('Error al ejecutar demo: ' + error.message);
+                runDemoBtn.disabled = false;
+                runDemoBtn.textContent = '▶️ Run Demo (ESP32 3V3 failure)';
+            }
+        });
+    }
+
+    /**
      * Mostrar mensaje general
      */
     function showMessage(message, type = 'info') {

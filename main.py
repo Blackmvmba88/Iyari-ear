@@ -9,7 +9,8 @@ from fastapi import (
     WebSocketDisconnect, 
     UploadFile, 
     File, 
-    HTTPException
+    HTTPException,
+    Request
 )
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, JSONResponse
@@ -18,6 +19,8 @@ import os
 import logging
 import tempfile
 from typing import Optional
+from datetime import datetime, timedelta
+from collections import defaultdict
 
 # Importar módulos de subtítulos
 try:
@@ -49,6 +52,11 @@ app = FastAPI(title="Iyari-ear - Subtítulos en Tiempo Real")
 MAX_AUDIO_SIZE = 10 * 1024 * 1024  # 10 MB límite para chunks de audio
 MAX_CONNECTIONS = 100  # Límite de conexiones simultáneas
 
+# Rate limiting configuration
+RATE_LIMIT_REQUESTS = 30  # Número de solicitudes permitidas
+RATE_LIMIT_WINDOW = 60  # Ventana de tiempo en segundos
+rate_limit_storage = defaultdict(list)  # IP -> lista de timestamps
+
 # Port configuration
 MIN_PORT = 1
 MAX_PORT = 65535
@@ -60,6 +68,35 @@ DEFAULT_LANGUAGE = 'es-ES'
 
 # Contador de conexiones activas
 active_connections = 0
+
+
+# Rate limiting helper
+def check_rate_limit(client_ip: str) -> bool:
+    """
+    Verifica si el cliente ha excedido el límite de solicitudes
+    
+    Args:
+        client_ip: Dirección IP del cliente
+    
+    Returns:
+        True si el cliente está dentro del límite, False si lo excedió
+    """
+    now = datetime.now()
+    cutoff = now - timedelta(seconds=RATE_LIMIT_WINDOW)
+    
+    # Limpiar timestamps antiguos
+    rate_limit_storage[client_ip] = [
+        ts for ts in rate_limit_storage[client_ip] if ts > cutoff
+    ]
+    
+    # Verificar límite
+    if len(rate_limit_storage[client_ip]) >= RATE_LIMIT_REQUESTS:
+        return False
+    
+    # Agregar timestamp actual
+    rate_limit_storage[client_ip].append(now)
+    return True
+
 
 # Verificar que los directorios existan antes de montar
 js_dir = os.path.abspath("js")
@@ -371,12 +408,13 @@ async def validate_subtitle_endpoint(file: UploadFile = File(...)):
 # ============================================================================
 
 @app.post("/api/diagnostic/session")
-async def create_diagnostic_session(request: DiagnosticSessionRequest):
+async def create_diagnostic_session(request: DiagnosticSessionRequest, http_request: Request):
     """
     Crea una nueva sesión de diagnóstico electrónico
     
     Args:
         request: Datos de la sesión (modelo de placa, estilo)
+        http_request: Solicitud HTTP para obtener IP del cliente
     
     Returns:
         ID de la sesión creada
@@ -385,6 +423,14 @@ async def create_diagnostic_session(request: DiagnosticSessionRequest):
         raise HTTPException(
             status_code=503,
             detail="Módulo de diagnóstico no disponible"
+        )
+    
+    # Rate limiting
+    client_ip = http_request.client.host
+    if not check_rate_limit(client_ip):
+        raise HTTPException(
+            status_code=429,
+            detail="Demasiadas solicitudes. Por favor, espera un momento."
         )
     
     try:
@@ -451,10 +497,10 @@ async def upload_diagnostic_image(
     
     # Validate session_id format to prevent directory traversal
     import re
-    if not re.match(r'^session_[0-9]{8}_[0-9]{6}_[a-f0-9]{8}$', session_id):
+    if not re.match(r'^session_[0-9]{8}_[0-9]{6}_[a-f0-9]{8,}$', session_id):
         raise HTTPException(
             status_code=400,
-            detail="Formato de session_id inválido"
+            detail=f"Formato de session_id inválido: {session_id}"
         )
     
     # Validar tipo de archivo
@@ -633,6 +679,108 @@ async def list_diagnostic_sessions():
         
     except Exception as e:
         logger.error(f"Error al listar sesiones: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.delete("/api/diagnostic/session/{session_id}")
+async def delete_diagnostic_session(session_id: str):
+    """
+    Elimina una sesión de diagnóstico y limpia archivos temporales
+    
+    Args:
+        session_id: ID de la sesión a eliminar
+    
+    Returns:
+        Confirmación de eliminación
+    """
+    if not DIAGNOSTIC_SUPPORT:
+        raise HTTPException(
+            status_code=503,
+            detail="Módulo de diagnóstico no disponible"
+        )
+    
+    try:
+        if session_id not in diagnostic_engine.sessions:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Sesión {session_id} no encontrada"
+            )
+        
+        # Limpiar archivos temporales de la sesión
+        diagnostic_dir = os.path.join(tempfile.gettempdir(), f"diagnostic_{session_id}")
+        if os.path.exists(diagnostic_dir):
+            import shutil
+            shutil.rmtree(diagnostic_dir)
+            logger.info(f"Directorio temporal eliminado: {diagnostic_dir}")
+        
+        # Eliminar sesión de memoria
+        del diagnostic_engine.sessions[session_id]
+        
+        return {
+            "success": True,
+            "message": f"Sesión {session_id} eliminada correctamente"
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error al eliminar sesión: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/api/diagnostic/cleanup")
+async def cleanup_old_diagnostic_sessions(max_age_hours: int = 24):
+    """
+    Limpia sesiones y archivos temporales antiguos
+    
+    Args:
+        max_age_hours: Edad máxima en horas (por defecto 24 horas)
+    
+    Returns:
+        Número de sesiones y archivos eliminados
+    """
+    if not DIAGNOSTIC_SUPPORT:
+        raise HTTPException(
+            status_code=503,
+            detail="Módulo de diagnóstico no disponible"
+        )
+    
+    try:
+        from datetime import timedelta
+        import shutil
+        
+        cutoff_time = datetime.now() - timedelta(hours=max_age_hours)
+        sessions_removed = 0
+        files_removed = 0
+        
+        # Limpiar sesiones antiguas
+        sessions_to_remove = []
+        for session_id, session in diagnostic_engine.sessions.items():
+            if session.creation_time < cutoff_time:
+                sessions_to_remove.append(session_id)
+        
+        for session_id in sessions_to_remove:
+            # Limpiar archivos
+            diagnostic_dir = os.path.join(tempfile.gettempdir(), f"diagnostic_{session_id}")
+            if os.path.exists(diagnostic_dir):
+                shutil.rmtree(diagnostic_dir)
+                files_removed += 1
+            
+            # Eliminar sesión
+            del diagnostic_engine.sessions[session_id]
+            sessions_removed += 1
+        
+        logger.info(f"Limpieza completada: {sessions_removed} sesiones, {files_removed} directorios")
+        
+        return {
+            "success": True,
+            "sessions_removed": sessions_removed,
+            "directories_removed": files_removed,
+            "cutoff_time": cutoff_time.isoformat()
+        }
+        
+    except Exception as e:
+        logger.error(f"Error en limpieza: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 

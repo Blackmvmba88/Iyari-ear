@@ -109,19 +109,25 @@ class TestDiagnosticEngine:
         engine_tech = DiagnosticEngine(style=DiagnosticStyle.TECHNICIAN)
         session_id = engine_tech.create_session("ESP32")
         hyp_tech = engine_tech.generate_full_hypothesis(session_id, rail="3V3")
-        assert "práctico" in hyp_tech.layer2.reasoning.lower() or "análisis" in hyp_tech.layer2.reasoning.lower()
+        # Técnico debe tener reasoning corto y directo
+        assert hyp_tech.layer2.reasoning != ""
+        assert len(hyp_tech.layer2.reasoning) < 200  # Conciso
         
         # Ingeniero
         engine_eng = DiagnosticEngine(style=DiagnosticStyle.ENGINEER)
         session_id2 = engine_eng.create_session("ESP32")
         hyp_eng = engine_eng.generate_full_hypothesis(session_id2, rail="3V3")
         assert hyp_eng.layer2.reasoning != ""
+        assert len(hyp_eng.layer2.reasoning) > len(hyp_tech.layer2.reasoning)  # Más detallado que técnico
         
         # Forense
         engine_for = DiagnosticEngine(style=DiagnosticStyle.FORENSIC)
         session_id3 = engine_for.create_session("ESP32")
         hyp_for = engine_for.generate_full_hypothesis(session_id3, rail="3V3")
         assert hyp_for.layer2.reasoning != ""
+        # Forense debe ser el más largo y detallado
+        assert len(hyp_for.layer2.reasoning) > len(hyp_tech.layer2.reasoning)
+        assert len(hyp_for.layer2.evidence) >= len(hyp_tech.layer2.evidence)
     
     def test_format_diagnostic_report(self):
         """Test formatear reporte de diagnóstico"""
