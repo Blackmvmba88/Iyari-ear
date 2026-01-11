@@ -1,5 +1,5 @@
 """
-Tests unitarios para el motor de diagnóstico electrónico
+Unit tests for the electronic diagnostic engine
 """
 
 import pytest

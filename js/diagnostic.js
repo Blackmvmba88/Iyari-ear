@@ -29,6 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const API_BASE = window.location.origin;
     const WS_PROTOCOL = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
     const WS_PORT = window.location.port || (window.location.protocol === 'https:' ? '443' : '8000');
+    const WS_HOST = `${WS_PROTOCOL}//${window.location.hostname}:${WS_PORT}`;
 
     /**
      * Crear nueva sesión de diagnóstico
@@ -240,7 +241,7 @@ document.addEventListener('DOMContentLoaded', () => {
      * Conectar WebSocket para actualizaciones en tiempo real
      */
     function connectDiagnosticWebSocket() {
-        const ws = new WebSocket(`${WS_PROTOCOL}//${window.location.hostname}:${WS_PORT}/ws/diagnostic/${currentSessionId}`);
+        const ws = new WebSocket(`${WS_HOST}/ws/diagnostic/${currentSessionId}`);
 
         ws.onopen = () => {
             console.log('WebSocket de diagnóstico conectado');

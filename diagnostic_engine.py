@@ -203,7 +203,8 @@ class DiagnosticEngine:
     def create_session(self, board_model: str, session_id: Optional[str] = None) -> str:
         """Crea una nueva sesión de diagnóstico"""
         if session_id is None:
-            session_id = f"session_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+            import uuid
+            session_id = f"session_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{uuid.uuid4().hex[:8]}"
         
         session = DiagnosticSession(
             session_id=session_id,
@@ -487,7 +488,7 @@ Hipótesis #{i} (Confianza: {hyp.overall_confidence*100:.1f}%)
         return report
     
     def export_session(self, session_id: str) -> Dict[str, Any]:
-        """Exporta sesión a formato JSON serializable"""
+        """Export session to JSON-serializable format"""
         
         if session_id not in self.sessions:
             raise ValueError(f"Sesión {session_id} no encontrada")

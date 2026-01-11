@@ -390,7 +390,7 @@ async def create_diagnostic_session(request: DiagnosticSessionRequest):
     try:
         # Mapear estilo al enum
         style_map = {
-            "técnico": DiagnosticStyle.TECHNICIAN,
+            "técnico": DiagnosticStyle.TECHNICIAN,  # Spanish: "technician"
             "ingeniero": DiagnosticStyle.ENGINEER,
             "forense": DiagnosticStyle.FORENSIC
         }
@@ -449,6 +449,14 @@ async def upload_diagnostic_image(
             detail="Se requiere session_id"
         )
     
+    # Validate session_id format to prevent directory traversal
+    import re
+    if not re.match(r'^session_[0-9]{8}_[0-9]{6}_[a-f0-9]{8}$', session_id):
+        raise HTTPException(
+            status_code=400,
+            detail="Formato de session_id inválido"
+        )
+    
     # Validar tipo de archivo
     if not file.content_type or not file.content_type.startswith('image/'):
         raise HTTPException(
@@ -457,13 +465,15 @@ async def upload_diagnostic_image(
         )
     
     try:
-        # Crear directorio temporal para imágenes de diagnóstico
+        # Crear directorio temporal para imágenes de diagnóstico (seguro)
+        import uuid
         diagnostic_dir = os.path.join(tempfile.gettempdir(), f"diagnostic_{session_id}")
         os.makedirs(diagnostic_dir, exist_ok=True)
         
-        # Guardar archivo
+        # Guardar archivo con nombre único y seguro
         file_ext = os.path.splitext(file.filename)[1]
-        file_path = os.path.join(diagnostic_dir, f"{image_type}_{len(os.listdir(diagnostic_dir)) + 1}{file_ext}")
+        safe_filename = f"{image_type}_{uuid.uuid4().hex[:8]}{file_ext}"
+        file_path = os.path.join(diagnostic_dir, safe_filename)
         
         with open(file_path, 'wb') as f:
             content = await file.read()
@@ -808,7 +818,8 @@ async def diagnostic_websocket(websocket: WebSocket, session_id: str):
                 "type": "error",
                 "message": str(e)
             })
-        except:
+        except Exception:
+            # WebSocket already closed
             pass
 
 
