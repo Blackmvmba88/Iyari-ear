@@ -9,22 +9,51 @@ python main.py
 # 2. Abre en tu navegador
 http://localhost:8000/diagnostic
 
-# 3. Crea una sesión
-Modelo: ESP32-DevKit
-Estilo: Técnico
-[Crear Sesión]
+# 3. ¡Prueba el Demo!
+Click en "▶️ Run Demo (ESP32 3V3 failure)"
 
-# 4. Sube fotos
-Arrastra imágenes de tu placa
+# O crea una sesión manual:
+# - Modelo: ESP32-DevKit
+# - Estilo: Técnico
+# - [Crear Sesión]
+# - Arrastra imágenes de tu placa
+# - [Analizar Imágenes]
+# - Recibe diagnóstico en tiempo real
+```
 
-# 5. Analiza
-[Analizar Imágenes]
+## 🎬 Demo Automático (¡NUEVO!)
 
-# 6. Recibe diagnóstico
-✔ Rail 3V3 identificado
-✔ Causa: Sin voltaje
-⚡ Impacto: CRÍTICO
-🔧 Siguiente paso: Medir TP3
+La forma más rápida de ver el sistema en acción:
+
+1. Abre http://localhost:8000/diagnostic
+2. Click en **"▶️ Run Demo (ESP32 3V3 failure)"**
+3. El sistema automáticamente:
+   - ✅ Crea una sesión de demo
+   - ✅ Simula carga de imagen
+   - ✅ Ejecuta análisis completo
+   - ✅ Muestra diagnóstico en tiempo real
+
+**Duración:** ~10 segundos  
+**Resultado:** Diagnóstico completo de falla 3V3 en ESP32
+
+### ¿Qué verás en el demo?
+
+```
+📸 Simulando captura de imágenes...
+✅ Demo iniciado - Sesión: session_xxx
+✅ Imagen frontal cargada
+🔍 Iniciando análisis de diagnóstico...
+
+✔ Identificando rails...
+✔ 3V3 encontrado
+✔ 5V encontrado
+✔ Región RF detectada
+✔ Posible regulador AMS1117
+✔ Analizando topología...
+✔ Generando hipótesis...
+
+💡 Hipótesis de Diagnóstico (Confianza: 84.5%)
+[Diagnóstico completo de 3 capas]
 ```
 
 ## Ejemplo Completo
