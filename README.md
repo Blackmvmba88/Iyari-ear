@@ -1,6 +1,8 @@
 # 🎤 Iyari-ear
 
 > **Subtítulos en tiempo real para que nadie se quede fuera de la conversación.**
+> 
+> **🔧 Sistema de Diagnóstico Electrónico Real para reparación profesional.**
 
 *Creado con cariño para una amiga.*
 
@@ -9,6 +11,24 @@
 [![Platform Support](https://img.shields.io/badge/platforms-Windows%20%7C%20Linux%20%7C%20macOS%20%7C%20Android-blue)]()
 [![PWA Ready](https://img.shields.io/badge/PWA-Ready-green)]()
 [![Python](https://img.shields.io/badge/python-3.7+-blue)]()
+
+---
+
+## ✨ Características Principales
+
+### 🎤 Sistema de Subtítulos en Tiempo Real
+- Transcripción en vivo para apoyo auditivo
+- Soporte para español e inglés
+- Modo PWA instalable
+- Interfaz accesible y colorida
+
+### 🔧 Sistema de Diagnóstico Electrónico (NUEVO)
+- **3 Capas de Diagnóstico**: Localización → Causa → Consecuencia
+- **Estilos de diagnóstico**: Técnico, Ingeniero, Forense
+- **Multi-shot**: Soporte para múltiples fotos por sesión
+- **Modo asíncrono**: "Foto → Procesa → Diagnóstico"
+- **Reportes completos**: Evidencia + diagnóstico + próximos pasos
+- **Sistema Rail-first**: Análisis de voltajes y topología
 
 ---
 
@@ -89,15 +109,111 @@ iyari-ear start
 pip install -r requirements.txt
 python main.py
 
-# Visita: http://localhost:8000
-# Presiona "Iniciar" → Habla → Ve el texto
+# Acceder a las aplicaciones:
+# - Subtítulos: http://localhost:8000
+# - Diagnóstico Electrónico: http://localhost:8000/diagnostic
+# - Optimizador de Subtítulos: http://localhost:8000/subtitle-optimizer
 ```
 
 **💡 Nuevo:** Instala como PWA para acceso rápido desde tu menú de apps
 
 ---
 
+## 🔧 Sistema de Diagnóstico Electrónico Real
+
+### ¿Qué es esto?
+
+Un sistema profesional de diagnóstico de placas electrónicas que piensa como un técnico de verdad.
+
+**No es solo reconocimiento visual** — es **razonamiento causal**.
+
+### El Flujo (Modo Asíncrono)
+
+```
+📸 Foto → Sueltas la placa → 🧠 App procesa → 📋 Diagnóstico completo
+```
+
+Este flujo te permite:
+- ✔ Usar ambas manos para trabajar
+- ✔ Usar soldador / aire caliente
+- ✔ Tomar mediciones
+- ✔ Comparar con otras placas
+- ✔ Generar reportes profesionales
+
+### Las 3 Capas de Diagnóstico
+
+#### Capa 1: Localización 📍
+- Dónde está la falla
+- Topología + Bloque + Rail + Componente
+
+#### Capa 2: Causa 🔍
+- Por qué existe la falla
+- Energía, señal, protección, ESD, etc.
+
+#### Capa 3: Consecuencia ⚡
+- Qué rompe funcionalmente
+- WiFi no enciende, MCU en reset, sin regulación, etc.
+
+### Ejemplo de Diagnóstico Real
+
+```
+📸 Foto de placa → App procesa
+
+✔ Identificando rails...
+✔ 3V3 encontrado
+✔ USB 5V encontrado
+✔ Región RF detectada
+✔ Posible regulador AMS1117
+✔ Hipótesis: 3V3 ausente
+
+📋 RESULTADO:
+  🎯 Capa 1: Rail 3V3, Regulador U1
+  🔍 Capa 2: Sin voltaje - Regulador falló
+  ⚡ Capa 3: CRÍTICO - Radio no enciende, placa no arranca
+  
+  🔧 Próximos pasos:
+     • Medir voltaje en TP3
+     • Verificar continuidad desde fuente
+     • Revisar AMS1117
+     
+  📊 Puntos de prueba: TP3, TP_3V3, Salida U1
+```
+
+### Uso Rápido
+
+```bash
+# Accede a la interfaz
+http://localhost:8000/diagnostic
+
+# 1. Crear sesión → Ingresa modelo de placa
+# 2. Seleccionar estilo (Técnico/Ingeniero/Forense)
+# 3. Subir fotos (frontal, backside, microscope, etc.)
+# 4. Presionar "Analizar"
+# 5. Recibir diagnóstico en tiempo real
+# 6. Exportar reporte (JSON/TXT)
+```
+
+### Características Avanzadas
+
+- **Multi-shot**: Sube 3-5 fotos de diferentes ángulos
+- **Sesiones persistentes**: Historial de diagnósticos
+- **Comparación A/B**: Compara con "Golden Board"
+- **Análisis Rail-first**: VCC → Regulación → MCU → IO
+- **Modo Ticket**: Saca fotos → App procesa → Devuelve diagnóstico
+
+### Casos de Uso
+
+1. **Taller de reparación**: Diagnóstico rápido antes de cotizar
+2. **Soporte remoto**: Cliente envía fotos → Tú das diagnóstico
+3. **Documentación**: Genera reportes con evidencia
+4. **Capacitación**: Aprende patrones de fallas comunes
+5. **Auditoría**: Historial de reparaciones y decisiones
+
+---
+
 ## ¿Qué es esto? 💡
+
+### Sistema de Subtítulos
 
 Una **aplicación multiplataforma** para generar subtítulos en tiempo real. Captura audio desde el micrófono del navegador, lo envía a un servidor backend que lo transcribe a texto, y muestra los subtítulos en la pantalla.
 

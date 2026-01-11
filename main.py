@@ -27,6 +27,14 @@ except ImportError:
     SUBTITLE_SUPPORT = False
     logging.warning("Módulo de procesamiento de subtítulos no disponible")
 
+# Importar motor de diagnóstico
+try:
+    from diagnostic_engine import DiagnosticEngine, DiagnosticStyle
+    DIAGNOSTIC_SUPPORT = True
+except ImportError:
+    DIAGNOSTIC_SUPPORT = False
+    logging.warning("Módulo de diagnóstico electrónico no disponible")
+
 # Configurar logging
 logging.basicConfig(
     level=logging.INFO,
@@ -76,6 +84,12 @@ else:
 # Inicializar el reconocedor de voz
 r = sr.Recognizer()
 
+# Inicializar motor de diagnóstico si está disponible
+diagnostic_engine = None
+if DIAGNOSTIC_SUPPORT:
+    diagnostic_engine = DiagnosticEngine(style=DiagnosticStyle.TECHNICIAN)
+    logger.info("Motor de diagnóstico electrónico inicializado")
+
 # Modelos Pydantic para API de subtítulos
 class SubtitleProcessRequest(BaseModel):
     """Solicitud de procesamiento de subtítulos"""
@@ -91,6 +105,25 @@ class SubtitleProcessResponse(BaseModel):
     validation_issues: list
     optimization_changes: int
     download_url: Optional[str] = None
+
+
+# Modelos Pydantic para API de diagnóstico
+class DiagnosticSessionRequest(BaseModel):
+    """Solicitud de creación de sesión de diagnóstico"""
+    board_model: str
+    diagnostic_style: str = "técnico"
+    session_id: Optional[str] = None
+
+
+class DiagnosticImageUpload(BaseModel):
+    """Metadata para subida de imagen de diagnóstico"""
+    session_id: str
+    image_type: str = "frontal"
+
+
+class DiagnosticAnalyzeRequest(BaseModel):
+    """Solicitud de análisis de diagnóstico"""
+    session_id: str
 
 
 @app.get("/")
@@ -113,13 +146,24 @@ async def subtitle_optimizer_page():
     return FileResponse(page_path)
 
 
+@app.get("/diagnostic")
+async def diagnostic_page():
+    """Sirve la página del sistema de diagnóstico electrónico."""
+    page_path = 'diagnostic.html'
+    if not os.path.isfile(page_path):
+        logger.error(f"Archivo diagnostic.html no encontrado: {page_path}")
+        return {"error": "Página no encontrada"}
+    return FileResponse(page_path)
+
+
 @app.get("/health")
 async def health_check():
     """Endpoint de salud para verificar que el servidor está funcionando."""
     return {
         "status": "ok", 
         "active_connections": active_connections,
-        "subtitle_support": SUBTITLE_SUPPORT
+        "subtitle_support": SUBTITLE_SUPPORT,
+        "diagnostic_support": DIAGNOSTIC_SUPPORT
     }
 
 
@@ -322,6 +366,266 @@ async def validate_subtitle_endpoint(file: UploadFile = File(...)):
             os.unlink(tmp_path)
 
 
+# ============================================================================
+# API DE DIAGNÓSTICO ELECTRÓNICO
+# ============================================================================
+
+@app.post("/api/diagnostic/session")
+async def create_diagnostic_session(request: DiagnosticSessionRequest):
+    """
+    Crea una nueva sesión de diagnóstico electrónico
+    
+    Args:
+        request: Datos de la sesión (modelo de placa, estilo)
+    
+    Returns:
+        ID de la sesión creada
+    """
+    if not DIAGNOSTIC_SUPPORT:
+        raise HTTPException(
+            status_code=503,
+            detail="Módulo de diagnóstico no disponible"
+        )
+    
+    try:
+        # Mapear estilo al enum
+        style_map = {
+            "técnico": DiagnosticStyle.TECHNICIAN,
+            "ingeniero": DiagnosticStyle.ENGINEER,
+            "forense": DiagnosticStyle.FORENSIC
+        }
+        
+        diagnostic_engine.style = style_map.get(
+            request.diagnostic_style,
+            DiagnosticStyle.TECHNICIAN
+        )
+        
+        # Crear sesión
+        session_id = diagnostic_engine.create_session(
+            board_model=request.board_model,
+            session_id=request.session_id
+        )
+        
+        logger.info(f"Sesión de diagnóstico creada: {session_id}")
+        
+        return {
+            "success": True,
+            "session_id": session_id,
+            "board_model": request.board_model,
+            "style": request.diagnostic_style
+        }
+        
+    except Exception as e:
+        logger.error(f"Error al crear sesión de diagnóstico: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/api/diagnostic/upload")
+async def upload_diagnostic_image(
+    file: UploadFile = File(...),
+    session_id: str = "",
+    image_type: str = "frontal"
+):
+    """
+    Sube una imagen a la sesión de diagnóstico
+    
+    Args:
+        file: Archivo de imagen
+        session_id: ID de la sesión
+        image_type: Tipo de imagen
+    
+    Returns:
+        ID de la imagen subida
+    """
+    if not DIAGNOSTIC_SUPPORT:
+        raise HTTPException(
+            status_code=503,
+            detail="Módulo de diagnóstico no disponible"
+        )
+    
+    if not session_id:
+        raise HTTPException(
+            status_code=400,
+            detail="Se requiere session_id"
+        )
+    
+    # Validar tipo de archivo
+    if not file.content_type or not file.content_type.startswith('image/'):
+        raise HTTPException(
+            status_code=400,
+            detail="El archivo debe ser una imagen"
+        )
+    
+    try:
+        # Crear directorio temporal para imágenes de diagnóstico
+        diagnostic_dir = os.path.join(tempfile.gettempdir(), f"diagnostic_{session_id}")
+        os.makedirs(diagnostic_dir, exist_ok=True)
+        
+        # Guardar archivo
+        file_ext = os.path.splitext(file.filename)[1]
+        file_path = os.path.join(diagnostic_dir, f"{image_type}_{len(os.listdir(diagnostic_dir)) + 1}{file_ext}")
+        
+        with open(file_path, 'wb') as f:
+            content = await file.read()
+            f.write(content)
+        
+        # Añadir a la sesión
+        image_id = diagnostic_engine.add_image(
+            session_id=session_id,
+            image_path=file_path,
+            image_type=image_type
+        )
+        
+        logger.info(f"Imagen subida: {image_id} para sesión {session_id}")
+        
+        return {
+            "success": True,
+            "image_id": image_id,
+            "session_id": session_id,
+            "image_type": image_type
+        }
+        
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except Exception as e:
+        logger.error(f"Error al subir imagen: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/api/diagnostic/analyze")
+async def analyze_diagnostic_session(request: DiagnosticAnalyzeRequest):
+    """
+    Inicia el análisis de diagnóstico de una sesión
+    
+    Args:
+        request: Contiene session_id
+    
+    Returns:
+        Confirmación de inicio del análisis
+    """
+    if not DIAGNOSTIC_SUPPORT:
+        raise HTTPException(
+            status_code=503,
+            detail="Módulo de diagnóstico no disponible"
+        )
+    
+    try:
+        # Verificar que la sesión existe
+        if request.session_id not in diagnostic_engine.sessions:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Sesión {request.session_id} no encontrada"
+            )
+        
+        session = diagnostic_engine.sessions[request.session_id]
+        
+        if len(session.images) == 0:
+            raise HTTPException(
+                status_code=400,
+                detail="La sesión no tiene imágenes para analizar"
+            )
+        
+        # Marcar sesión como en progreso
+        session.status = "en_progreso"
+        
+        # Generar hipótesis de ejemplo (en producción usaría ML/CV)
+        # Hipótesis 1: Problema en rail 3V3
+        hyp1 = diagnostic_engine.generate_full_hypothesis(
+            session_id=request.session_id,
+            rail="3V3"
+        )
+        session.hypotheses.append(hyp1)
+        
+        # Marcar como completada
+        session.status = "completada"
+        
+        logger.info(f"Análisis completado para sesión {request.session_id}")
+        
+        return {
+            "success": True,
+            "session_id": request.session_id,
+            "status": "analysis_started",
+            "message": "El análisis ha comenzado. Conéctate vía WebSocket para recibir actualizaciones."
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error al iniciar análisis: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/api/diagnostic/session/{session_id}")
+async def get_diagnostic_session(session_id: str):
+    """
+    Obtiene el estado y resultados de una sesión de diagnóstico
+    
+    Args:
+        session_id: ID de la sesión
+    
+    Returns:
+        Datos completos de la sesión
+    """
+    if not DIAGNOSTIC_SUPPORT:
+        raise HTTPException(
+            status_code=503,
+            detail="Módulo de diagnóstico no disponible"
+        )
+    
+    try:
+        if session_id not in diagnostic_engine.sessions:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Sesión {session_id} no encontrada"
+            )
+        
+        # Exportar sesión
+        session_data = diagnostic_engine.export_session(session_id)
+        
+        # Generar reporte de texto
+        report_text = diagnostic_engine.format_diagnostic_report(session_id)
+        session_data['report_text'] = report_text
+        
+        return session_data
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error al obtener sesión: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/api/diagnostic/sessions")
+async def list_diagnostic_sessions():
+    """
+    Lista todas las sesiones de diagnóstico
+    
+    Returns:
+        Lista de resúmenes de sesiones
+    """
+    if not DIAGNOSTIC_SUPPORT:
+        raise HTTPException(
+            status_code=503,
+            detail="Módulo de diagnóstico no disponible"
+        )
+    
+    try:
+        sessions = []
+        for session_id in diagnostic_engine.sessions:
+            summary = diagnostic_engine.get_diagnostic_summary(session_id)
+            sessions.append(summary)
+        
+        return {
+            "success": True,
+            "count": len(sessions),
+            "sessions": sessions
+        }
+        
+    except Exception as e:
+        logger.error(f"Error al listar sesiones: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
     """
@@ -416,6 +720,96 @@ async def websocket_endpoint(websocket: WebSocket):
     finally:
         active_connections -= 1
         logger.info(f"Conexiones activas: {active_connections}")
+
+
+@app.websocket("/ws/diagnostic/{session_id}")
+async def diagnostic_websocket(websocket: WebSocket, session_id: str):
+    """
+    WebSocket para actualizaciones en tiempo real del diagnóstico
+    
+    Envía mensajes de progreso y resultados mientras se analiza
+    """
+    if not DIAGNOSTIC_SUPPORT:
+        await websocket.close(code=1008, reason="Diagnóstico no disponible")
+        return
+    
+    if session_id not in diagnostic_engine.sessions:
+        await websocket.close(code=1008, reason="Sesión no encontrada")
+        return
+    
+    await websocket.accept()
+    logger.info(f"Cliente WebSocket de diagnóstico conectado: {session_id}")
+    
+    try:
+        session = diagnostic_engine.sessions[session_id]
+        
+        # Simular progreso de análisis
+        progress_messages = [
+            "✔ Identificando rails...",
+            "✔ 3V3 encontrado",
+            "✔ 5V encontrado",
+            "✔ Región RF detectada",
+            "✔ Posible regulador AMS1117",
+            "✔ Analizando topología...",
+            "✔ Generando hipótesis..."
+        ]
+        
+        for msg in progress_messages:
+            await websocket.send_json({
+                "type": "progress",
+                "message": msg
+            })
+            await asyncio.sleep(0.5)  # Simular procesamiento
+        
+        # Enviar hipótesis
+        for hypothesis in session.hypotheses:
+            await websocket.send_json({
+                "type": "hypothesis",
+                "hypothesis": {
+                    "hypothesis_id": hypothesis.hypothesis_id,
+                    "overall_confidence": hypothesis.overall_confidence,
+                    "layer1": {
+                        "voltage_rail": hypothesis.layer1.voltage_rail,
+                        "component_id": hypothesis.layer1.component_id,
+                        "functional_block": hypothesis.layer1.functional_block
+                    },
+                    "layer2": {
+                        "fault_cause": hypothesis.layer2.fault_cause.value,
+                        "reasoning": hypothesis.layer2.reasoning,
+                        "evidence": hypothesis.layer2.evidence
+                    },
+                    "layer3": {
+                        "functional_impact": hypothesis.layer3.functional_impact,
+                        "impact_level": hypothesis.layer3.impact_level.value,
+                        "affected_features": hypothesis.layer3.affected_features
+                    },
+                    "next_steps": hypothesis.next_steps,
+                    "test_points": hypothesis.test_points
+                }
+            })
+            await asyncio.sleep(0.3)
+        
+        # Enviar mensaje de completación con reporte
+        report_text = diagnostic_engine.format_diagnostic_report(session_id)
+        session_data = diagnostic_engine.export_session(session_id)
+        session_data['report_text'] = report_text
+        
+        await websocket.send_json({
+            "type": "complete",
+            "results": session_data
+        })
+        
+    except WebSocketDisconnect:
+        logger.info(f"Cliente WebSocket de diagnóstico desconectado: {session_id}")
+    except Exception as e:
+        logger.error(f"Error en WebSocket de diagnóstico: {e}")
+        try:
+            await websocket.send_json({
+                "type": "error",
+                "message": str(e)
+            })
+        except:
+            pass
 
 
 if __name__ == "__main__":

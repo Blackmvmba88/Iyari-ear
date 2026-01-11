@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sistema de Diagnóstico Real para Reparación de Electrónica">
+    <meta name="theme-color" content="#ff6b00">
+    <title>Iyari-ear - Diagnóstico Electrónico</title>
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='90' font-size='90'>🔧</text></svg>">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px 20px;
+            background: rgba(255, 107, 0, 0.1);
+            border-radius: 20px;
+            border: 2px solid rgba(255, 107, 0, 0.3);
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            color: #ff6b00;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px rgba(255, 107, 0, 0.5);
+        }
+
+        header p {
+            font-size: 1.1rem;
+            color: #b0b0b0;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 968px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: rgba(30, 30, 50, 0.8);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid rgba(255, 107, 0, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .card h2 {
+            color: #ff6b00;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .upload-area {
+            border: 3px dashed rgba(255, 107, 0, 0.4);
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            background: rgba(255, 107, 0, 0.05);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .upload-area:hover {
+            border-color: #ff6b00;
+            background: rgba(255, 107, 0, 0.1);
+        }
+
+        .upload-area.dragover {
+            border-color: #00ff9f;
+            background: rgba(0, 255, 159, 0.1);
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #ff6b00 0%, #ff8c00 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(255, 107, 0, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 0, 0.5);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #00ff9f 0%, #00d4ff 100%);
+        }
+
+        select, input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 107, 0, 0.3);
+            background: rgba(30, 30, 50, 0.9);
+            color: #e0e0e0;
+            font-size: 1rem;
+            margin-bottom: 15px;
+        }
+
+        select:focus, input[type="text"]:focus {
+            outline: none;
+            border-color: #ff6b00;
+            box-shadow: 0 0 10px rgba(255, 107, 0, 0.3);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #b0b0b0;
+            font-weight: 500;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .images-preview {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .image-item {
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid rgba(255, 107, 0, 0.3);
+            aspect-ratio: 1;
+        }
+
+        .image-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .image-item .badge {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(255, 107, 0, 0.9);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .diagnosis-area {
+            min-height: 400px;
+            max-height: 600px;
+            overflow-y: auto;
+            background: rgba(20, 20, 35, 0.8);
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid rgba(255, 107, 0, 0.2);
+        }
+
+        .diagnosis-status {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid;
+        }
+
+        .status-analyzing {
+            background: rgba(0, 212, 255, 0.1);
+            border-color: #00d4ff;
+            color: #00d4ff;
+        }
+
+        .status-complete {
+            background: rgba(0, 255, 159, 0.1);
+            border-color: #00ff9f;
+            color: #00ff9f;
+        }
+
+        .hypothesis {
+            background: rgba(255, 107, 0, 0.05);
+            border: 1px solid rgba(255, 107, 0, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .hypothesis-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .confidence-badge {
+            background: linear-gradient(135deg, #ff6b00 0%, #ff8c00 100%);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .layer {
+            margin-bottom: 15px;
+            padding-left: 15px;
+            border-left: 3px solid;
+        }
+
+        .layer-1 {
+            border-color: #00d4ff;
+        }
+
+        .layer-2 {
+            border-color: #ff6b00;
+        }
+
+        .layer-3 {
+            border-color: #ff0066;
+        }
+
+        .layer h4 {
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .layer p {
+            margin: 5px 0;
+            line-height: 1.6;
+        }
+
+        .impact-critical {
+            color: #ff0066;
+            font-weight: 600;
+        }
+
+        .impact-high {
+            color: #ff6b00;
+            font-weight: 600;
+        }
+
+        .next-steps {
+            background: rgba(0, 255, 159, 0.05);
+            border: 1px solid rgba(0, 255, 159, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .next-steps h4 {
+            color: #00ff9f;
+            margin-bottom: 10px;
+        }
+
+        .next-steps ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .next-steps li {
+            padding: 5px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .next-steps li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #00ff9f;
+            font-weight: bold;
+        }
+
+        .progress-message {
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            background: rgba(0, 212, 255, 0.1);
+            color: #00d4ff;
+            font-size: 0.9rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(30, 30, 50, 0.5);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 107, 0, 0.5);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 107, 0, 0.7);
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔧 Diagnóstico Electrónico Real</h1>
+            <p>Sistema de 3 capas: Localización → Causa → Consecuencia</p>
+        </header>
+
+        <div class="main-content">
+            <!-- Panel Izquierdo: Configuración y Carga -->
+            <div class="card">
+                <h2>📋 Nueva Sesión de Diagnóstico</h2>
+                
+                <div class="form-group">
+                    <label for="board-model">Modelo de Placa:</label>
+                    <input type="text" id="board-model" placeholder="Ej: ESP32-DevKit, iPhone 12, DJI Phantom 4">
+                </div>
+
+                <div class="form-group">
+                    <label for="diagnostic-style">Estilo de Diagnóstico:</label>
+                    <select id="diagnostic-style">
+                        <option value="técnico">Técnico (Práctico, resolutivo)</option>
+                        <option value="ingeniero">Ingeniero (Causal, metodológico)</option>
+                        <option value="forense">Forense (Detallista, profundo)</option>
+                    </select>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn" id="create-session-btn">Crear Sesión</button>
+                </div>
+
+                <hr style="margin: 30px 0; border: 1px solid rgba(255, 107, 0, 0.2);">
+
+                <h3 style="color: #ff6b00; margin-bottom: 15px;">📸 Cargar Imágenes</h3>
+                
+                <div class="form-group">
+                    <label for="image-type">Tipo de Imagen:</label>
+                    <select id="image-type">
+                        <option value="frontal">Frontal</option>
+                        <option value="backside">Reverso</option>
+                        <option value="closeup">Primer Plano</option>
+                        <option value="microscope">Microscopio</option>
+                        <option value="rf_area">Área RF</option>
+                        <option value="power_area">Área de Potencia</option>
+                    </select>
+                </div>
+
+                <div class="upload-area" id="upload-area">
+                    <div class="upload-icon">📤</div>
+                    <p><strong>Haz clic o arrastra imágenes aquí</strong></p>
+                    <p style="font-size: 0.9rem; color: #888; margin-top: 10px;">
+                        Soporta: JPG, PNG, WebP
+                    </p>
+                </div>
+                <input type="file" id="file-input" accept="image/*" multiple>
+
+                <div class="images-preview" id="images-preview"></div>
+
+                <div style="margin-top: 20px;" class="action-buttons">
+                    <button class="btn btn-secondary" id="analyze-btn" disabled>🔍 Analizar Imágenes</button>
+                </div>
+            </div>
+
+            <!-- Panel Derecho: Resultados del Diagnóstico -->
+            <div class="card">
+                <h2>🧠 Análisis y Diagnóstico</h2>
+                
+                <div class="diagnosis-area" id="diagnosis-area">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🔧</div>
+                        <p><strong>Sin diagnóstico activo</strong></p>
+                        <p style="margin-top: 10px;">Crea una sesión y carga imágenes para comenzar</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Panel Completo: Reporte Final -->
+        <div class="card full-width" id="report-section" style="display: none;">
+            <h2>📄 Reporte de Diagnóstico</h2>
+            <div class="action-buttons" style="margin-bottom: 20px;">
+                <button class="btn" id="export-json-btn">💾 Exportar JSON</button>
+                <button class="btn" id="export-text-btn">📝 Exportar Texto</button>
+                <button class="btn btn-secondary" id="new-session-btn">🔄 Nueva Sesión</button>
+            </div>
+            <pre id="report-content" style="background: rgba(20, 20, 35, 0.8); padding: 20px; border-radius: 10px; overflow-x: auto; color: #e0e0e0; line-height: 1.6;"></pre>
+        </div>
+    </div>
+
+    <script src="js/diagnostic.js"></script>
+</body>
+</html>
