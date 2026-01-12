@@ -1,16 +1,43 @@
-# 🎤 Iyari-ear
+# 🎤 Iyari-ear v1.0
 
-> **Subtítulos en tiempo real para que nadie se quede fuera de la conversación.**
+> **"Para que nadie quede fuera de la conversación"**
 > 
-> **🔧 Sistema de Diagnóstico Electrónico Real para reparación profesional.**
+> *Un puente de empatía técnica*
 
-*Creado con cariño para una amiga.*
+**Subtítulos en tiempo real para conversaciones cara a cara.**  
+**Sistema de diagnóstico electrónico real para reparación profesional.**
 
-**Ahora disponible como aplicación multiplataforma** 🚀
+*Creado con cariño para una amiga. Compartido con amor para el mundo.*
 
+[![Version](https://img.shields.io/badge/version-1.0.0-blue)]()
 [![Platform Support](https://img.shields.io/badge/platforms-Windows%20%7C%20Linux%20%7C%20macOS%20%7C%20Android-blue)]()
 [![PWA Ready](https://img.shields.io/badge/PWA-Ready-green)]()
 [![Python](https://img.shields.io/badge/python-3.7+-blue)]()
+
+📖 **[Leer el Manifiesto](./MANIFIESTO.md)** | 🎬 **[Crear tu Demo](./GUIA_DEMO.md)** | 🚀 **[Release Notes v1.0](./RELEASE_NOTES_v1.0.md)**
+
+---
+
+## 🎉 ¡Bienvenido a Iyari-ear v1.0!
+
+**Esta es la primera coronación oficial del proyecto.**
+
+Iyari-ear deja de ser "solo código" y se convierte en **obra con alma**.
+
+### ¿Qué es Iyari-ear?
+
+Un **puente de empatía técnica** que permite a dos personas entenderse sin repetir tres veces la misma frase.
+
+- 🎤 **Subtítulos en tiempo real** para conversaciones cara a cara
+- 🔧 **Diagnóstico electrónico real** con razonamiento causal
+- 💝 **Diseñado con empatía**, no con métricas
+- 🔒 **No graba, no guarda, no vigila** (por diseño)
+
+### Los Tres Elementos de la Coronación
+
+1. ✨ **El Manifiesto**: [MANIFIESTO.md](./MANIFIESTO.md) - Para quién existe, qué dolor repara, qué belleza crea
+2. 🎬 **La Demo Pública**: [GUIA_DEMO.md](./GUIA_DEMO.md) - Cómo crear y compartir tu demo de 30 segundos
+3. 🚀 **El Release Oficial**: [RELEASE_NOTES_v1.0.md](./RELEASE_NOTES_v1.0.md) - v1.0 "Para que nadie quede fuera de la conversación"
 
 ---
 
@@ -301,6 +328,26 @@ Iyari-ear no es un producto. Es una herramienta de empatía.
 
 La tecnología al servicio de la conexión humana.
 
+### Historia de Origen 📖
+
+Este proyecto nació de ver a alguien que amas esforzarse para entender una conversación.
+
+No de un análisis de mercado.  
+No de una oportunidad de negocio.  
+No de métricas o KPIs.
+
+**Nació del deseo de que alguien especial no se quedara fuera de la conversación.**
+
+En purépecha, **Iyari** significa "corazón" o "alma".  
+Este proyecto tiene alma porque nació del corazón.
+
+Cada línea de código fue escrita con una pregunta en mente:  
+*"¿Esto ayuda a conectar o complica la vida?"*
+
+Y esa pregunta sigue guiando cada decisión técnica.
+
+Lee la historia completa en el **[Manifiesto](./MANIFIESTO.md)**.
+
 ## Flujo de la Aplicación 🔄
 
 ```
@@ -442,3 +489,113 @@ sudo apt-get update && sudo apt-get install -y portaudio19-dev
 ```
 
 Después de instalarlo, vuelve a ejecutar `pip install -r requirements.txt`.
+
+---
+
+## 🎬 Comparte Tu Demo
+
+**"El universo ama las demostraciones."**
+
+Si Iyari-ear te ayuda (o a alguien que conoces), nos encantaría verlo en acción.
+
+### Cómo Crear Tu Demo de 30 Segundos
+
+1. 📱 Graba la app funcionando (con celular o cámara)
+2. 🗣️ Muestra subtítulos apareciendo en tiempo real
+3. ✂️ Edita a 30 segundos
+4. 📤 Comparte en redes o GitHub
+
+**Guía completa**: [GUIA_DEMO.md](./GUIA_DEMO.md)
+
+### Dónde Compartir
+
+- **GitHub**: Abre un Issue con tu demo/historia
+- **Twitter/X**: Usa #IyariEar #Accesibilidad
+- **LinkedIn**: Comparte tu caso de uso
+- **YouTube**: Video completo con descripción
+
+### Historias Reales
+
+Usa la plantilla: [ISSUE_TEMPLATE_HISTORIAS_REALES.md](./ISSUE_TEMPLATE_HISTORIAS_REALES.md)
+
+**No necesitamos métricas. Necesitamos historias humanas.**
+
+---
+
+## 🤝 Contribuir
+
+Este proyecto vive de la comunidad.
+
+### Formas de Contribuir
+
+- 💻 **Código**: Mejoras, features, fixes
+- 📖 **Documentación**: Traducciones, guías, ejemplos
+- 🐛 **Reporte de bugs**: Con contexto y pasos para reproducir
+- 💡 **Ideas**: Sugerencias que ayuden a conectar personas
+- 🎬 **Demos**: Muestra la app en acción
+- ❤️ **Historias**: Comparte cómo te ayudó
+
+### Guías de Contribución
+
+```bash
+# Fork el repositorio
+git clone https://github.com/TU_USUARIO/Iyari-ear.git
+
+# Crea una rama
+git checkout -b feature/mi-mejora
+
+# Haz tus cambios, commit y push
+git push origin feature/mi-mejora
+
+# Abre un Pull Request
+```
+
+**Recuerda**: Cada decisión debe responder:  
+*"¿Esto ayuda a conectar o complica la vida?"*
+
+---
+
+## 📜 Licencia
+
+Este proyecto está diseñado para ser usado, modificado y compartido libremente.
+
+**Única condición**: Mantén el espíritu de empatía y privacidad.
+
+---
+
+## 🌐 Enlaces Importantes
+
+- 💝 **[Manifiesto](./MANIFIESTO.md)** - El alma del proyecto
+- 🚀 **[Release v1.0](./RELEASE_NOTES_v1.0.md)** - Notas de la primera coronación
+- 🎬 **[Guía de Demo](./GUIA_DEMO.md)** - Crea tu demo de 30 segundos
+- ⚡ **[Inicio Rápido](./INICIO_RAPIDO.md)** - Empieza en 60 segundos
+- 📖 **[Identidad del Repo](./GUIA_IDENTIDAD_REPO.md)** - Convenciones y estilo
+
+---
+
+<div align="center">
+
+## 💝 La Coronación
+
+**Iyari-ear v1.0 — "Para que nadie quede fuera de la conversación"**
+
+*Un puente de empatía técnica*
+
+**Creado con cariño para una amiga.**  
+**Compartido con amor para el mundo.**
+
+✨ Enero 2025 ✨
+
+---
+
+*"Este proyecto no necesita empujones. Necesita testigos."*
+
+*"La mejor coronación es humana + mínima + real."*
+
+---
+
+⭐ Si este proyecto te ayuda, dale una estrella en GitHub  
+🎬 Comparte tu demo  
+❤️ Cuéntanos tu historia
+
+</div>

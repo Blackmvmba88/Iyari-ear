@@ -824,6 +824,20 @@ async def diagnostic_websocket(websocket: WebSocket, session_id: str):
 
 
 if __name__ == "__main__":
+    # Leer versión del archivo VERSION
+    version = "unknown"
+    version_file = os.path.join(os.path.dirname(__file__), "VERSION")
+    if os.path.exists(version_file):
+        with open(version_file, 'r') as f:
+            version = f.read().strip()
+    
+    # Banner de inicio
+    logger.info("=" * 60)
+    logger.info("🎤 Iyari-ear v%s", version)
+    logger.info('"Para que nadie quede fuera de la conversación"')
+    logger.info("Un puente de empatía técnica")
+    logger.info("=" * 60)
+    
     # Iniciar el servidor Uvicorn
     # El host y el puerto pueden configurarse mediante variables de entorno.
     host = os.environ.get("HOST", "127.0.0.1")
@@ -836,4 +850,7 @@ if __name__ == "__main__":
         port = DEFAULT_PORT
 
     logger.info(f"Iniciando servidor en {host}:{port}")
+    logger.info("Accede a la aplicación en: http://%s:%d", host if host != "0.0.0.0" else "localhost", port)
+    logger.info("Presiona Ctrl+C para detener el servidor")
+    logger.info("=" * 60)
     uvicorn.run(app, host=host, port=port)
