@@ -18,6 +18,16 @@
 
 ---
 
+<div align="center">
+
+### 📰 Release v1.0 en 1 párrafo
+
+*Iyari-ear v1.0 es un puente de empatía técnica: subtítulos en tiempo real para que nadie quede fuera de la conversación, y diagnóstico electrónico causal para técnicos de reparación. Sin grabar. Sin vigilar. Sin métricas. Creado con cariño para una amiga. Compartido con amor para el mundo. No nació del capitalismo ni del mercado — nació de la ternura, que es una fuerza infraestimada en la ingeniería.*
+
+</div>
+
+---
+
 ## 🎉 ¡Bienvenido a Iyari-ear v1.0!
 
 **Esta es la primera coronación oficial del proyecto.**
@@ -366,6 +376,32 @@ La conversación aparece como subtítulos grandes y claros:
 La tecnología desaparece.
 Solo queda la conversación.
 
+---
+
+## 🌟 Casos Reales
+
+**No métricas. No KPIs. Historias pequeñas de humanos.**
+
+### Abuela — mesa familiar — subtítulos → sonrisa
+
+Una tablet en la mesa. Palabras que aparecen. Una abuela que vuelve a participar en la conversación familiar. No necesitó preguntar "¿qué dijiste?" ni una sola vez.
+
+### Técnico — ESP32 — rail 3V3 → diagnóstico en 60 segundos
+
+Un técnico saca foto del ESP32 sin voltaje. La app identifica: "Rail 3V3 ausente → Regulador AMS1117". Mide. Confirma. Repara. Todo en 60 segundos.
+
+### Consulta médica
+
+Un paciente con dificultad auditiva. Un doctor que habla normalmente. Un celular que traduce voz a texto en tiempo real. La conversación fluye. Sin repeticiones. Sin malentendidos.
+
+### Cliente remoto manda foto → diagnóstico asíncrono
+
+Un cliente en otro país envía foto de una placa. El técnico la analiza con Iyari-ear. Devuelve diagnóstico completo: ubicación de falla, causa raíz, próximos pasos. Todo sin estar físicamente presente.
+
+---
+
+**Estos casos legitiman el propósito más que cualquier paper.**
+
 ## Por qué existe esto ❤️
 
 **"Creado con cariño para una amiga."**
@@ -377,6 +413,17 @@ Iyari-ear no es un producto. Es una herramienta de empatía.
 - Mostrar palabras, no juzgar voces.
 
 La tecnología al servicio de la conexión humana.
+
+### 🛠️ Mini Manifiesto Técnico
+
+**Para los ingenieros — desde la belleza:**
+
+- **Privacidad por diseño**: El audio se transcribe y desaparece. Sin logs. Sin bases de datos. Sin historiales.
+- **Diagnóstico causal, no visual**: El sistema razona sobre topología y flujo de energía, no solo reconoce componentes.
+- **Subtítulos para conexión humana, no registro**: Las palabras aparecen para ser leídas, no para ser guardadas.
+- **Cero métricas. Cero vigilancia. Cero gamificación**: No medimos engagement, retención ni conversiones. Medimos si ayuda.
+
+*Este es oro para cualquier tecnólogo ético.*
 
 ### Historia de Origen 📖
 
@@ -620,6 +667,24 @@ Este proyecto está diseñado para ser usado, modificado y compartido libremente
 - 🎬 **[Guía de Demo](./GUIA_DEMO.md)** - Crea tu demo de 30 segundos
 - ⚡ **[Inicio Rápido](./INICIO_RAPIDO.md)** - Empieza en 60 segundos
 - 📖 **[Identidad del Repo](./GUIA_IDENTIDAD_REPO.md)** - Convenciones y estilo
+
+---
+
+## 🌅 Dónde va esto después
+
+**En 2026, Iyari-ear demuestra que el puente existe.**  
+**En 2027 queremos que más personas lo crucen.**
+
+No hay roadmap con fechas.  
+No hay promesas grandilocuentes.  
+Solo una dirección:
+
+- Más idiomas, más contextos, más personas conectadas.
+- Diagnóstico que aprende de cada técnico que lo usa.
+- Comunidad de personas que construyen empatía técnica.
+
+El futuro le da respiración al presente.  
+La ciencia y el arte siempre piden horizonte 🌅
 
 ---
 
