@@ -127,6 +127,12 @@ Un sistema profesional de diagnóstico de placas electrónicas que piensa como u
 
 **No es solo reconocimiento visual** — es **razonamiento causal**.
 
+### 📸 Interfaz del Sistema
+
+![Dashboard de Diagnóstico](docs/assets/diagnostic/01-initial-dashboard.png)
+
+*Dashboard profesional con modo oscuro, drag & drop, y análisis en tiempo real*
+
 ### El Flujo (Modo Asíncrono)
 
 ```
@@ -142,17 +148,61 @@ Este flujo te permite:
 
 ### Las 3 Capas de Diagnóstico
 
-#### Capa 1: Localización 📍
-- Dónde está la falla
-- Topología + Bloque + Rail + Componente
+<table>
+<tr>
+<td width="33%">
 
-#### Capa 2: Causa 🔍
-- Por qué existe la falla
-- Energía, señal, protección, ESD, etc.
+#### 📍 Capa 1: Localización
+**¿Dónde está la falla?**
+- Topología de la placa
+- Bloque funcional
+- Rail de voltaje
+- Componente específico
 
-#### Capa 3: Consecuencia ⚡
-- Qué rompe funcionalmente
-- WiFi no enciende, MCU en reset, sin regulación, etc.
+</td>
+<td width="33%">
+
+#### 🔍 Capa 2: Causa
+**¿Por qué existe la falla?**
+- Análisis de causa raíz
+- Evidencia recopilada
+- Razonamiento técnico
+- Pruebas sugeridas
+
+</td>
+<td width="33%">
+
+#### ⚡ Capa 3: Consecuencia
+**¿Qué rompe funcionalmente?**
+- Impacto en el sistema
+- Funciones afectadas
+- Efectos en cascada
+- Nivel de criticidad
+
+</td>
+</tr>
+</table>
+
+### 🎭 Tres Estilos de Diagnóstico
+
+| Estilo | Perfil | Ejemplo |
+|--------|--------|---------|
+| **🔧 Técnico** | Directo y práctico | "3V3 ausente → Regulador falló. Medir salida, revisar entrada 5V." |
+| **⚙️ Ingeniero** | Causal y metodológico | "El rail 3V3 es generado por un LDO (AMS1117). Causas posibles: (1) Regulador dañado, (2) Entrada 5V insuficiente, (3) Caps en corto..." |
+| **🔬 Forense** | Exhaustivo y detallado | "Análisis completo: VBUS → Fusible → 5V → U1 → 3V3. Escenarios ordenados por probabilidad: (1) Falla térmica 60%, (2) Corto downstream 25%..." |
+
+📖 [Ver ejemplos completos de cada estilo](docs/DIAGNOSTIC_STYLES.md)
+
+### ▶️ Demo Rápido
+
+**Prueba el sistema sin hardware:**
+
+1. Abre http://localhost:8000/diagnostic
+2. Click en **"▶️ Run Demo (ESP32 3V3 failure)"**
+3. Observa el análisis en tiempo real
+4. Revisa el diagnóstico completo
+
+⏱️ Tiempo: 60 segundos
 
 ### Ejemplo de Diagnóstico Real
 

@@ -284,18 +284,96 @@ class DiagnosticEngine:
         
         # Lógica de razonamiento según estilo
         if self.style == DiagnosticStyle.TECHNICIAN:
-            reasoning = "Análisis práctico basado en síntomas comunes"
+            # TÉCNICO: Directo, práctico, orientado a solución rápida
             if layer1.voltage_rail == "3V3":
                 fault_cause = FaultCause.NO_VOLTAGE
                 evidence.append("Rail 3V3 identificado")
                 evidence.append("Regulador probable: AMS1117 o similar")
-                reasoning = "Si 3V3 está ausente, probable falla en regulador de voltaje"
+                reasoning = "3V3 ausente → Regulador falló. Medir salida, revisar entrada 5V, verificar caps de salida."
+            elif layer1.voltage_rail == "5V":
+                fault_cause = FaultCause.NO_VOLTAGE
+                evidence.append("Rail 5V identificado")
+                reasoning = "Sin 5V → Verificar VBUS, fusible, protección de entrada."
         
         elif self.style == DiagnosticStyle.ENGINEER:
-            reasoning = "Análisis causal sistemático desde topología"
-            
+            # INGENIERO: Causal, metodológico, explica el por qué
+            if layer1.voltage_rail == "3V3":
+                fault_cause = FaultCause.NO_VOLTAGE
+                evidence.append("Ausencia de tensión en rail 3V3")
+                evidence.append("Regulador lineal LDO típico para este rail")
+                evidence.append("Topología: USB_5V → AMS1117 → 3V3 → RF+MCU")
+                reasoning = (
+                    "El rail 3V3 es generado por un regulador lineal (probablemente AMS1117-3.3) "
+                    "que recibe 5V de entrada. Si 3V3 está ausente, causas posibles: "
+                    "(1) Regulador dañado por sobrecorriente o ESD, "
+                    "(2) Entrada 5V ausente o insuficiente, "
+                    "(3) Capacitores de salida en cortocircuito. "
+                    "El método de diagnóstico correcto es medir en cascada: VBUS → 5V → 3V3."
+                )
+            elif layer1.voltage_rail == "5V":
+                fault_cause = FaultCause.NO_VOLTAGE
+                evidence.append("Ausencia de tensión en rail 5V")
+                evidence.append("Rail 5V típicamente proviene de USB VBUS")
+                evidence.append("Topología: USB_VBUS → Protección/Fusible → 5V")
+                reasoning = (
+                    "El rail 5V generalmente proviene directamente del USB VBUS a través de "
+                    "un fusible o protección de sobrecorriente. Si 5V está ausente: "
+                    "(1) Fusible abierto por sobrecorriente, "
+                    "(2) Cable USB defectuoso, "
+                    "(3) Puerto USB dañado, "
+                    "(4) Protección activa por corto en downstream."
+                )
+        
         elif self.style == DiagnosticStyle.FORENSIC:
-            reasoning = "Análisis detallado de todas las rutas de señal"
+            # FORENSE: Exhaustivo, detallista, considera todos los escenarios
+            if layer1.voltage_rail == "3V3":
+                fault_cause = FaultCause.NO_VOLTAGE
+                evidence.extend([
+                    "Rail 3V3 ausente o significativamente bajo (<2.8V)",
+                    "Regulador LDO serie 1117 detectado en posición U1",
+                    "Capacitor electrolítico de salida C15 (10uF) visible",
+                    "Traza de cobre desde regulador hacia módulo RF intacta",
+                    "No se observa daño térmico visible en regulador"
+                ])
+                reasoning = (
+                    "Análisis de cadena de alimentación completa: "
+                    "VBUS (USB) → Fusible/Protección → 5V_IN → U1 (AMS1117-3.3) → 3V3_OUT → Cargas. "
+                    "Escenarios posibles ordenados por probabilidad: "
+                    "(1) Falla interna del regulador U1 por stress térmico o ESD (60%), "
+                    "(2) Cortocircuito en rail 3V3 por componente downstream (25%), "
+                    "(3) Entrada 5V_IN insuficiente por caída en USB o fusible abierto (10%), "
+                    "(4) Soldadura fría en pines del regulador (5%). "
+                    "Plan de verificación: (A) Medir 5V_IN en pin 1 de U1, "
+                    "(B) Desconectar cargas 3V3 y remedir salida, "
+                    "(C) Medir resistencia a tierra en rail 3V3, "
+                    "(D) Reflow de U1 si mediciones anteriores OK. "
+                    "Si U1 está caliente en reposo, indica cortocircuito downstream. "
+                    "Temperatura normal de operación: <50°C al tacto."
+                )
+            elif layer1.voltage_rail == "5V":
+                fault_cause = FaultCause.NO_VOLTAGE
+                evidence.extend([
+                    "Rail 5V ausente o significativamente bajo (<4.5V)",
+                    "USB VBUS esperado como fuente primaria",
+                    "Fusible o protección F1 visible en topología",
+                    "Traza desde conector USB a protección intacta",
+                    "Sin signos visuales de daño en componentes de protección"
+                ])
+                reasoning = (
+                    "Análisis de cadena USB completa: "
+                    "USB_CONNECTOR (pin VBUS) → F1 (Fusible) → 5V_RAIL → Reguladores downstream. "
+                    "Escenarios posibles ordenados por probabilidad: "
+                    "(1) Fusible F1 abierto por sobrecorriente previa (50%), "
+                    "(2) Cable USB defectuoso o conexión intermitente (30%), "
+                    "(3) Protección ESD/TVS en corto a tierra (15%), "
+                    "(4) Conector USB con pines dañados (5%). "
+                    "Plan de verificación: (A) Medir voltaje en pin VBUS del conector, "
+                    "(B) Verificar continuidad de fusible F1, "
+                    "(C) Medir resistencia a tierra en 5V rail (debe ser >100Ω), "
+                    "(D) Probar con fuente externa de 5V en lugar de USB. "
+                    "Si VBUS presenta voltaje pero 5V no, el problema está entre conector y rail. "
+                    "Corriente normal esperada: <500mA en reposo para placas típicas."
+                )
         
         return DiagnosticLayer2(
             fault_cause=fault_cause,
