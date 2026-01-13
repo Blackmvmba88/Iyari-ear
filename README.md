@@ -14,7 +14,7 @@
 [![PWA Ready](https://img.shields.io/badge/PWA-Ready-green)]()
 [![Python](https://img.shields.io/badge/python-3.7+-blue)]()
 
-📖 **[Leer el Manifiesto](./MANIFIESTO.md)** | 🎬 **[Crear tu Demo](./GUIA_DEMO.md)** | 🚀 **[Release Notes v1.0](./RELEASE_NOTES_v1.0.md)**
+📖 **[Leer el Manifiesto](./MANIFIESTO.md)** | 🏗️ **[Arquitectura](./ARCHITECTURE.md)** | 🌐 **[API Reference](./API.md)** | 🤝 **[Contribuir](./CONTRIBUTING.md)**
 
 ---
 
@@ -630,9 +630,18 @@ Este proyecto vive de la comunidad.
 - 🐛 **Reporte de bugs**: Con contexto y pasos para reproducir
 - 💡 **Ideas**: Sugerencias que ayuden a conectar personas
 - 🎬 **Demos**: Muestra la app en acción
-- ❤️ **Historias**: Comparte cómo te ayudó
+- ❤️ **Historias**: Comparte cómo te ayudó → [TESTIMONIOS.md](./TESTIMONIOS.md)
 
-### Guías de Contribución
+### Guía Completa de Contribución
+
+Lee la **[Guía de Contribución](./CONTRIBUTING.md)** para:
+- Estilo técnico (Python, JavaScript, HTML/CSS)
+- Decisiones prohibidas (grabación, analytics, gamificación)
+- Estilo de comunicación (PRs, issues)
+- Configuración del entorno de desarrollo
+- Proceso de code review
+
+### Inicio Rápido
 
 ```bash
 # Fork el repositorio
@@ -640,6 +649,9 @@ git clone https://github.com/TU_USUARIO/Iyari-ear.git
 
 # Crea una rama
 git checkout -b feature/mi-mejora
+
+# Instala dependencias
+pip install -r requirements.txt
 
 # Haz tus cambios, commit y push
 git push origin feature/mi-mejora
@@ -649,6 +661,11 @@ git push origin feature/mi-mejora
 
 **Recuerda**: Cada decisión debe responder:  
 *"¿Esto ayuda a conectar o complica la vida?"*
+
+### Arquitectura y APIs
+
+- **[Arquitectura Técnica](./ARCHITECTURE.md)** - Diagramas y estructura del sistema
+- **[API Reference](./API.md)** - Documentación completa de REST y WebSocket APIs
 
 ---
 
@@ -662,11 +679,24 @@ Este proyecto está diseñado para ser usado, modificado y compartido libremente
 
 ## 🌐 Enlaces Importantes
 
+### 📚 Documentación Técnica
+
+- 🏗️ **[Arquitectura Técnica](./ARCHITECTURE.md)** - Cómo funciona el sistema
+- 🌐 **[API Reference](./API.md)** - REST y WebSocket APIs documentadas
+- 🤝 **[Guía de Contribución](./CONTRIBUTING.md)** - Estilo técnico y humano
+- 📊 **[Impacto Técnico](./IMPACT.md)** - Métricas y valor cuantificado
+
+### 💝 Filosofía y Comunidad
+
 - 💝 **[Manifiesto](./MANIFIESTO.md)** - El alma del proyecto
-- 🚀 **[Release v1.0](./RELEASE_NOTES_v1.0.md)** - Notas de la primera coronación
+- 💬 **[Testimonios](./TESTIMONIOS.md)** - Historias reales de impacto humano
 - 🎬 **[Guía de Demo](./GUIA_DEMO.md)** - Crea tu demo de 30 segundos
-- ⚡ **[Inicio Rápido](./INICIO_RAPIDO.md)** - Empieza en 60 segundos
 - 📖 **[Identidad del Repo](./GUIA_IDENTIDAD_REPO.md)** - Convenciones y estilo
+
+### 🚀 Releases
+
+- 🚀 **[Release v1.0](./RELEASE_NOTES_v1.0.md)** - Notas de la primera coronación
+- ⚡ **[Inicio Rápido](./INICIO_RAPIDO.md)** - Empieza en 60 segundos
 
 ---
 
