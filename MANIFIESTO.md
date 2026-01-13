@@ -111,6 +111,139 @@ Cada decisión técnica se hace preguntando:
 
 ---
 
+## La Dimensión Política del Proyecto
+
+Iyari-ear no existe en el vacío. Es un acto técnico, pero también un acto político.
+
+### Contra la Vigilancia Tecnológica
+
+La industria tecnológica ha convertido las herramientas en sistemas de control.
+
+**Pero no tiene que ser así.**
+
+#### Tres Verdades Fundamentales
+
+**1. La tecnología no debe vigilar para ser útil.**
+
+Las conversaciones pueden transcribirse sin ser grabadas.  
+El diagnóstico puede funcionar sin almacenar datos de usuario.  
+La utilidad no requiere extracción.
+
+**2. La tecnología no debe extraer para ser valiosa.**
+
+El valor de Iyari-ear no está en los datos que recopila (ninguno).  
+El valor está en el momento que crea:  
+Dos personas que se entienden sin repetir.  
+Un técnico que diagnostica con confianza.
+
+**3. La tecnología puede servir sin exigir datos a cambio.**
+
+No necesitas dar tu privacidad para recibir ayuda.  
+No necesitas ser perfilado para ser asistido.  
+No necesitas convertirte en producto para usar una herramienta.
+
+### El Rechazo del Modelo Extractivo
+
+Silicon Valley construyó un imperio sobre la premisa:
+
+> *"Si es gratis, tú eres el producto."*
+
+**Iyari-ear rechaza esa premisa.**
+
+Aquí:
+- Es gratis Y no eres el producto
+- Es útil Y no te vigila
+- Te ayuda Y no te explota
+
+**Porque las dos cosas pueden coexistir.**
+
+### Anti-Capitalismo de Vigilancia
+
+Este proyecto no busca:
+- Maximizar engagement
+- Aumentar tiempo en la app
+- Generar datos para vender
+- Crear dependencia
+- Monetizar atención
+
+**Busca:**
+- Resolver un problema humano
+- Desaparecer cuando no se necesita
+- Respetar la dignidad
+- Empoderar sin controlar
+
+### La Belleza de lo Anti-Silicon Valley
+
+Iyari-ear es bello precisamente porque:
+
+- No tiene dashboard de analytics
+- No mide retención
+- No tiene roadmap de monetización
+- No necesita crecer exponencialmente
+- No necesita "disrumpir" nada
+
+**Solo necesita ayudar.**
+
+Y en ese "solo" hay una revolución silenciosa.
+
+---
+
+## La Corresponsabilidad Afectiva
+
+Iyari-ear es una herramienta incompleta por diseño.
+
+**No es un sustituto del cuidado humano.**
+
+### El Pacto Implícito
+
+Cuando usas Iyari-ear en una conversación:
+
+1. **Tú** aceptas que la herramienta ayuda pero no reemplaza la empatía
+2. **La otra persona** acepta participar en hacer la conversación accesible
+3. **Ambos** aceptan que la tecnología es un puente, no un muro
+
+### Lo Que Esto Significa
+
+- Los subtítulos ayudan, pero también ayuda hablar más claro
+- El diagnóstico sugiere, pero el técnico decide
+- La herramienta optimiza, pero el humano verifica
+
+**La tecnología pide que el humano también participe.**
+
+### Por Qué Esto Es Radical
+
+Silicon Valley te promete:
+> *"Automatizaremos todo. Tú solo consume."*
+
+Iyari-ear te dice:
+> *"Ayudamos, pero seguimos necesitándonos mutuamente."*
+
+**Eso es una belleza anti-Silicon Valley.**
+
+---
+
+## La Invitación Política
+
+Si crees que:
+- La privacidad es un derecho, no una concesión
+- Las herramientas deben servir, no extraer
+- La tecnología puede ser ética sin ser inútil
+- El código abierto es resistencia pacífica
+
+**Entonces Iyari-ear es para ti.**
+
+No como usuario. Como cómplice.
+
+### Cómo Ser Cómplice
+
+1. **Usa la herramienta** - Sin dar datos a cambio
+2. **Comparte el código** - Demuestra que es posible
+3. **Rechaza lo extractivo** - No todo gratis es igual
+4. **Construye alternativas** - Fork, modifica, mejora
+5. **Inspira otros proyectos** - La ética es contagiosa
+
+---
+
 ## A Quién Agradecemos
 
 A la **amiga** que inspiró este proyecto sin saberlo.  
