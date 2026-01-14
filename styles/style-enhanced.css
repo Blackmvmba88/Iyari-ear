@@ -1,3 +1,41 @@
+/* ========================================
+   Iyari-ear — Color Identity System v2.0
+   ======================================== */
+
+:root {
+    /* Emocional - Empatía ❤️ */
+    --color-empathy-primary: #ff0080;
+    --color-empathy-light: #ff66b3;
+    --color-empathy-dark: #cc0066;
+    
+    /* Técnico - Razón ⚙️ */
+    --color-technical-primary: #00ff9f;
+    --color-technical-cyan: #00bfff;
+    --color-technical-dark: #00cc7f;
+    
+    /* Institucional - Credibilidad 📚 */
+    --color-institutional-primary: #ff6b00;
+    --color-institutional-light: #ffa500;
+    --color-institutional-dark: #cc5500;
+    
+    /* Fondos */
+    --background-dark: #1a1a2e;
+    --background-darker: #16213e;
+    --background-card: rgba(30, 30, 50, 0.8);
+    
+    /* Texto */
+    --text-primary: #ffffff;
+    --text-secondary: #e0e0e0;
+    --text-muted: #b0b0b0;
+    --text-dim: #808080;
+    
+    /* Estados */
+    --success: #00ff9f;
+    --warning: #ffa500;
+    --error: #ff4444;
+    --info: #00bfff;
+}
+
 /* Reset y configuración base */
 * {
     margin: 0;
@@ -12,8 +50,8 @@ html, body {
 
 body {
     /* Tema oscuro suave y profesional */
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-    color: #e8e8e8;
+    background: linear-gradient(135deg, var(--background-dark) 0%, var(--background-darker) 100%);
+    color: var(--text-secondary);
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     display: flex;
     justify-content: center;
@@ -42,16 +80,16 @@ body {
     border: 3px solid transparent;
     border-radius: 16px;
     /* Fondo oscuro suave con sutil transparencia */
-    background: rgba(30, 30, 45, 0.85);
+    background: var(--background-card);
     backdrop-filter: blur(10px);
     padding: 40px;
     margin-bottom: 20px;
     box-shadow: 0 8px 32px rgba(0, 255, 159, 0.1);
-    /* Borde con acento rainbow sutil */
+    /* Borde con acento tripartito (Empatía → Técnico → Institucional) */
     border-image: linear-gradient(135deg, 
-        rgba(255, 0, 128, 0.3),
-        rgba(0, 255, 159, 0.3),
-        rgba(0, 191, 255, 0.3)
+        var(--color-empathy-primary),
+        var(--color-technical-primary),
+        var(--color-institutional-primary)
     ) 1;
     transition: all 0.3s ease;
 }
@@ -59,7 +97,7 @@ body {
 /* Animación pulse cuando detecta voz */
 #subtitles-container.listening {
     animation: pulse-border 2s ease-in-out infinite;
-    border-color: #00ff9f;
+    border-color: var(--color-technical-primary);
 }
 
 @keyframes pulse-border {
@@ -77,7 +115,7 @@ body {
     /* Texto ultra legible y grande */
     font-size: clamp(2rem, 5vw, 3.5rem);
     line-height: 1.6;
-    color: #ffffff;
+    color: var(--text-primary);
     word-break: break-word;
     margin: 0;
     font-weight: 600;
@@ -90,9 +128,9 @@ body {
 #status-bar {
     min-height: 40px;
     font-size: 1.1rem;
-    color: #b0b0b0;
+    color: var(--text-muted);
     padding: 10px;
-    background: rgba(30, 30, 45, 0.6);
+    background: var(--background-card);
     border-radius: 12px;
     margin-bottom: 15px;
     display: flex;
@@ -112,12 +150,12 @@ body {
 #status::before {
     content: "●";
     font-size: 1.5rem;
-    color: #888;
+    color: var(--text-dim);
     animation: none;
 }
 
 #status.active::before {
-    color: #00ff9f;
+    color: var(--color-technical-primary);
     animation: pulse-dot 1.5s ease-in-out infinite;
 }
 
@@ -132,7 +170,7 @@ body {
     align-items: center;
     gap: 5px;
     font-size: 0.9rem;
-    color: #888;
+    color: var(--text-dim);
 }
 
 .quality-bar {
@@ -145,7 +183,11 @@ body {
 
 .quality-fill {
     height: 100%;
-    background: linear-gradient(90deg, #ff0080, #00ff9f, #00bfff);
+    background: linear-gradient(90deg, 
+        var(--color-empathy-primary), 
+        var(--color-technical-primary), 
+        var(--color-institutional-primary)
+    );
     transition: width 0.3s ease;
 }
 
@@ -160,7 +202,7 @@ body {
 }
 
 .control-group label {
-    color: #d0d0d0;
+    color: var(--text-secondary);
     display: flex;
     align-items: center;
     gap: 10px;
@@ -174,19 +216,19 @@ body {
 
 .control-group label:hover {
     background: rgba(255, 255, 255, 0.1);
-    color: #ffffff;
+    color: var(--text-primary);
 }
 
 .control-group input[type="checkbox"] {
     cursor: pointer;
     width: 20px;
     height: 20px;
-    accent-color: #00ff9f;
+    accent-color: var(--color-technical-primary);
 }
 
 .control-group select {
-    background: rgba(30, 30, 45, 0.8);
-    color: #ffffff;
+    background: var(--background-card);
+    color: var(--text-primary);
     border: 2px solid rgba(0, 255, 159, 0.3);
     border-radius: 8px;
     padding: 10px 16px;
@@ -200,11 +242,11 @@ body {
 
 .control-group select:hover {
     border-color: rgba(0, 255, 159, 0.6);
-    background: rgba(30, 30, 45, 1);
+    background: var(--background-darker);
 }
 
 .control-group select:focus {
-    border-color: #00ff9f;
+    border-color: var(--color-technical-primary);
     box-shadow: 0 0 0 3px rgba(0, 255, 159, 0.2);
 }
 
@@ -215,10 +257,13 @@ body {
     align-items: center;
 }
 
-/* Botón principal con efecto rainbow sutil */
+/* Botón principal con gradiente técnico (Verde → Cyan) */
 #toggle-btn {
-    background: linear-gradient(135deg, #00ff9f 0%, #00bfff 100%);
-    color: #1a1a2e;
+    background: linear-gradient(135deg, 
+        var(--color-technical-primary) 0%, 
+        var(--color-technical-cyan) 100%
+    );
+    color: var(--background-dark);
     border: none;
     border-radius: 50%;
     width: 140px;
@@ -267,8 +312,11 @@ body {
 }
 
 #toggle-btn.recording {
-    background: linear-gradient(135deg, #ff0080 0%, #ff4040 100%);
-    color: #ffffff;
+    background: linear-gradient(135deg, 
+        var(--color-empathy-primary) 0%, 
+        var(--color-empathy-light) 100%
+    );
+    color: var(--text-primary);
     box-shadow: 0 8px 32px rgba(255, 0, 128, 0.4);
     animation: pulse-recording 2s ease-in-out infinite;
 }
