@@ -169,6 +169,8 @@ Juntos forman la **identidad visual canónica** de Iyari-ear.
 
 Todos los colores cumplen con **WCAG 2.1 AA** para contraste:
 
+> **Nota**: Ratios calculados usando herramientas de contraste de color (WebAIM Contrast Checker). Los valores pueden variar ligeramente según el monitor y configuraciones de visualización. Se recomienda verificar en contextos de uso real.
+
 | Color | Fondo Oscuro | Ratio | Estado |
 |-------|--------------|-------|--------|
 | Rosa `#ff66b3` | `#1a1a2e` | 7.8:1 | ✅ AAA |
