@@ -51,6 +51,36 @@ Un **puente de empatía técnica** que permite a dos personas entenderse sin rep
 
 ---
 
+## 🌅 Visión 2.0 — El Siguiente Nivel
+
+**La versión 1.0 corona el puente. La versión 2.0 abre el tránsito.**
+
+### 📚 Documentación de Identidad Visual y Diseño
+
+- 🎨 **[Sistema de Color](./docs/COLOR_IDENTITY.md)** — Paleta tripartita: Empatía / Técnica / Institucional
+- 📝 **[Guía Tipográfica](./docs/TYPOGRAPHY_GUIDE.md)** — Jerarquía visual y respiración cognitiva
+- 🎭 **[Posters Narrativos](./docs/NARRATIVE_POSTERS.md)** — 5 posters conceptuales en ASCII art
+- 📐 **[Biblioteca Visual](./docs/VISUAL_LIBRARY.md)** — Catálogo completo de assets y guidelines
+
+### 🎯 Pitch para Diferentes Audiencias
+
+- 🏥 **[Medical Pitch](./docs/PITCH_VARIANTS.md#-medical-pitch)** — Para profesionales de salud
+- 🔧 **[Repair Pitch](./docs/PITCH_VARIANTS.md#-repair-pitch)** — Para técnicos electrónicos
+- ♿ **[Accessibility Pitch](./docs/PITCH_VARIANTS.md#-accessibility-pitch)** — Para comunidad de accesibilidad
+- 🎓 **[Education Pitch](./docs/PITCH_VARIANTS.md#-education-pitch)** — Para instituciones educativas
+- 💻 **[Open Source Pitch](./docs/PITCH_VARIANTS.md#-open-source-pitch)** — Para desarrolladores
+- 🌿 **[Ethical Tech Pitch](./docs/PITCH_VARIANTS.md#-ethical-tech-pitch)** — Para inversionistas éticos
+
+### ⚡ Roadmap Técnico
+
+- 🚀 **[Visión 2026-2027](./docs/VISION_2026_2027.md)** — Roadmap completo del ecosistema
+- ⚙️ **[Mejoras de Desempeño](./docs/PERFORMANCE_ROADMAP.md)** — Streaming, modelos locales, robustez ética
+- 🌐 **[Landing Page](./docs/LANDING_PAGE.md)** — Estructura narrativa para web pública
+
+> 💡 **Nota**: Esta documentación representa la visión 2.0 del proyecto. Algunas características están en desarrollo o planeadas para implementación futura.
+
+---
+
 ## ✨ Características Principales
 
 ### 🎤 Sistema de Subtítulos en Tiempo Real
