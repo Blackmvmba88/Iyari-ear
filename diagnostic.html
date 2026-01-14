@@ -10,6 +10,40 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='90' font-size='90'>🔧</text></svg>">
     
     <style>
+        :root {
+            /* Emocional - Empatía ❤️ */
+            --color-empathy-primary: #ff0080;
+            --color-empathy-light: #ff66b3;
+            --color-empathy-dark: #cc0066;
+            
+            /* Técnico - Razón ⚙️ */
+            --color-technical-primary: #00ff9f;
+            --color-technical-cyan: #00bfff;
+            --color-technical-dark: #00cc7f;
+            
+            /* Institucional - Credibilidad 📚 */
+            --color-institutional-primary: #ff6b00;
+            --color-institutional-light: #ffa500;
+            --color-institutional-dark: #cc5500;
+            
+            /* Fondos */
+            --background-dark: #1a1a2e;
+            --background-darker: #16213e;
+            --background-card: rgba(30, 30, 50, 0.8);
+            
+            /* Texto */
+            --text-primary: #ffffff;
+            --text-secondary: #e0e0e0;
+            --text-muted: #b0b0b0;
+            --text-dim: #808080;
+            
+            /* Estados */
+            --success: #00ff9f;
+            --warning: #ffa500;
+            --error: #ff4444;
+            --info: #00bfff;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -18,8 +52,8 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            color: #e0e0e0;
+            background: linear-gradient(135deg, var(--background-dark) 0%, var(--background-darker) 100%);
+            color: var(--text-secondary);
             min-height: 100vh;
             padding: 20px;
         }
@@ -35,19 +69,19 @@
             padding: 30px 20px;
             background: rgba(255, 107, 0, 0.1);
             border-radius: 20px;
-            border: 2px solid rgba(255, 107, 0, 0.3);
+            border: 2px solid var(--color-institutional-primary);
         }
 
         header h1 {
             font-size: 2.5rem;
-            color: #ff6b00;
+            color: var(--color-institutional-primary);
             margin-bottom: 10px;
             text-shadow: 0 0 20px rgba(255, 107, 0, 0.5);
         }
 
         header p {
             font-size: 1.1rem;
-            color: #b0b0b0;
+            color: var(--text-muted);
         }
 
         .main-content {
@@ -64,7 +98,7 @@
         }
 
         .card {
-            background: rgba(30, 30, 50, 0.8);
+            background: var(--background-card);
             border-radius: 15px;
             padding: 25px;
             border: 1px solid rgba(255, 107, 0, 0.2);
@@ -72,7 +106,7 @@
         }
 
         .card h2 {
-            color: #ff6b00;
+            color: var(--color-institutional-primary);
             margin-bottom: 20px;
             font-size: 1.5rem;
             display: flex;
@@ -96,12 +130,12 @@
         }
 
         .upload-area:hover {
-            border-color: #ff6b00;
+            border-color: var(--color-institutional-primary);
             background: rgba(255, 107, 0, 0.1);
         }
 
         .upload-area.dragover {
-            border-color: #00ff9f;
+            border-color: var(--color-technical-primary);
             background: rgba(0, 255, 159, 0.1);
         }
 
@@ -115,7 +149,10 @@
         }
 
         .btn {
-            background: linear-gradient(135deg, #ff6b00 0%, #ff8c00 100%);
+            background: linear-gradient(135deg, 
+                var(--color-institutional-primary) 0%, 
+                var(--color-institutional-light) 100%
+            );
             color: white;
             border: none;
             padding: 12px 30px;
@@ -139,7 +176,10 @@
         }
 
         .btn-secondary {
-            background: linear-gradient(135deg, #00ff9f 0%, #00d4ff 100%);
+            background: linear-gradient(135deg, 
+                var(--color-technical-primary) 0%, 
+                var(--color-technical-cyan) 100%
+            );
         }
 
         select, input[type="text"] {
@@ -147,7 +187,7 @@
             padding: 12px;
             border-radius: 8px;
             border: 1px solid rgba(255, 107, 0, 0.3);
-            background: rgba(30, 30, 50, 0.9);
+            background: var(--background-card);
             color: #e0e0e0;
             font-size: 1rem;
             margin-bottom: 15px;
