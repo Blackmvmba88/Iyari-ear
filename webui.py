@@ -2,18 +2,8 @@ import gradio as gr  # type: ignore
 from PIL import Image, ImageOps
 from typing import Dict, Tuple, Union, List, Optional, cast
 
-# Constants for dimension limits
-MAX_DIMENSION = 20000
-MAX_PIXELS = 100_000_000  # 100 megapíxeles
-
-# Si 'image_tool' no existe en el entorno, este import fallará.
-# Mantengo el type: ignore para permitir correr en dev.
-PRESETS: Dict[str, Dict[str, Union[Tuple[int, int], List[int], int]]] = {}
-try:
-    from image_tool import PRESETS as imported_presets  # type: ignore
-    PRESETS.update(cast(Dict[str, Dict[str, Union[Tuple[int, int], List[int], int]]], imported_presets))
-except ImportError:
-    pass
+# Importar constantes y utilidades desde el módulo común
+from common import PRESETS, MAX_DIMENSION, MAX_PIXELS
 
 # ---- Tipos ----
 PresetDict = Dict[str, Dict[str, Union[Tuple[int, int], List[int], int]]]
