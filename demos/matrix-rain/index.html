@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matrix Rain - Demo Visual</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <canvas id="matrix-canvas"></canvas>
+    
+    <div id="controls-panel">
+        <h2>Controles Matrix Rain</h2>
+        
+        <div class="control-group">
+            <label>Color:</label>
+            <input type="color" id="color-picker" value="#00ff00">
+            <span class="color-preview"></span>
+        </div>
+        
+        <div class="control-group">
+            <label>
+                <input type="checkbox" id="rainbow-mode"> Modo Arcoíris
+            </label>
+        </div>
+        
+        <div class="control-group">
+            <label>
+                <input type="checkbox" id="audio-viz-toggle"> Visualizador de Audio
+            </label>
+        </div>
+        
+        <div class="control-group">
+            <label>Tamaño de Fuente: <span id="font-size-value">16</span>px</label>
+            <input type="range" id="font-size" min="10" max="30" value="16">
+        </div>
+        
+        <div class="control-group">
+            <label>Velocidad: <span id="speed-value">50</span>ms</label>
+            <input type="range" id="speed" min="10" max="200" value="50">
+        </div>
+        
+        <div class="control-group">
+            <label>Densidad: <span id="density-value">0.015</span></label>
+            <input type="range" id="density" min="0.005" max="0.05" step="0.005" value="0.015">
+        </div>
+        
+        <div class="control-group">
+            <label>Set de Caracteres:</label>
+            <div>
+                <label><input type="radio" name="char-set" value="katakana" checked> Katakana</label>
+                <label><input type="radio" name="char-set" value="latin"> Latino</label>
+                <label><input type="radio" name="char-set" value="nums"> Números</label>
+                <label><input type="radio" name="char-set" value="binary"> Binario</label>
+            </div>
+        </div>
+        
+        <button id="fullscreen-btn">Pantalla Completa</button>
+        <button id="reset-btn">Restablecer</button>
+        <button id="toggle-controls">Ocultar Controles</button>
+    </div>
+    
+    <script src="matrix.js"></script>
+</body>
+</html>

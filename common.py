@@ -1,6 +1,18 @@
 """
 Módulo común con utilidades compartidas para Iyari-ear.
-Contiene constantes, validaciones y funciones auxiliares reutilizables.
+
+Este módulo centraliza constantes, validaciones y funciones auxiliares
+que son reutilizadas por múltiples módulos del proyecto, eliminando
+la duplicación de código y facilitando el mantenimiento.
+
+Módulos que usan este módulo:
+- image_tool.py: CLI para manipulación de imágenes
+- webui.py: Interfaz web Gradio para manipulación de imágenes
+
+Contenido:
+- Constantes: MAX_DIMENSION, MAX_PIXELS, PRESETS
+- Validaciones: validate_dimensions(), validate_aspect_ratio()
+- Utilidades: list_presets()
 """
 from typing import Dict, Tuple, Union, List
 
