@@ -2,31 +2,21 @@ import gradio as gr  # type: ignore
 from PIL import Image, ImageOps
 from typing import Dict, Tuple, Union, List, Optional, cast
 
-# Constants for dimension limits
-MAX_DIMENSION = 20000
-MAX_PIXELS = 100_000_000  # 100 megapíxeles
-
-# Si 'image_tool' no existe en el entorno, este import fallará.
-# Mantengo el type: ignore para permitir correr en dev.
-PRESETS: Dict[str, Dict[str, Union[Tuple[int, int], List[int], int]]] = {}
-try:
-    from image_tool import PRESETS as imported_presets  # type: ignore
-    PRESETS.update(cast(Dict[str, Dict[str, Union[Tuple[int, int], List[int], int]]], imported_presets))
-except ImportError:
-    pass
+# Importar constantes y utilidades desde el módulo común
+from common import PRESETS, MAX_DIMENSION, MAX_PIXELS, validate_dimensions as validate_dims_common, validate_aspect_ratio as validate_ratio_common
 
 # ---- Tipos ----
 PresetDict = Dict[str, Dict[str, Union[Tuple[int, int], List[int], int]]]
 
 
 def validate_dimensions(width: int, height: int) -> None:
-    """Valida que las dimensiones estén dentro de límites seguros."""
-    if width <= 0 or height <= 0:
-        raise gr.Error(f"Las dimensiones deben ser mayores a 0 (recibido: {width}x{height}).")
-    if width > MAX_DIMENSION or height > MAX_DIMENSION:
-        raise gr.Error(f"Las dimensiones exceden el límite máximo de {MAX_DIMENSION}px.")
-    if width * height > MAX_PIXELS:
-        raise gr.Error(f"El total de píxeles ({width * height:,}) excede el límite de {MAX_PIXELS:,}.")
+    """
+    Valida que las dimensiones estén dentro de límites seguros.
+    Wrapper que convierte el resultado de la validación común a gr.Error.
+    """
+    valid, error_msg = validate_dims_common(width, height)
+    if not valid:
+        raise gr.Error(error_msg)
 
 
 # ---- Helpers de tamaño/ratio ----

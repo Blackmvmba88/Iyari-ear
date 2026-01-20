@@ -3,50 +3,12 @@ import os
 import sys
 from PIL import Image, ImageOps
 
-# ==============================================================================
-# Constants
-# ==============================================================================
-
-# Límite máximo de dimensiones para evitar consumo excesivo de memoria
-MAX_DIMENSION = 20000
-MAX_PIXELS = 100_000_000  # 100 megapíxeles
+# Importar utilidades comunes
+from common import PRESETS, validate_dimensions, validate_aspect_ratio, list_presets
 
 # ==============================================================================
-# Logic Functions
+# Funciones de validación de archivos
 # ==============================================================================
-
-PRESETS = {
-    "spotify_avatar":   {"size": (750, 750)},
-    "spotify_header":   {"size": (2660, 1140)},
-    "facebook_post":    {"size": (1080, 1080)},
-    "instagram_square": {"size": (1080, 1080)},
-    "instagram_story":  {"size": (1080, 1920)},
-    "fiverr_gig":       {"size": (1280, 769)},
-    "square_3000":      {"size": (3000, 3000)},
-    "panoramic_2x1":    {"aspect_ratio": (2, 1), "width": 2000},
-    "panoramic_3x1":    {"aspect_ratio": (3, 1), "width": 3000},
-    "story_9x16":       {"size": (1080, 1920)}, # Alias for instagram_story
-}
-
-def list_presets():
-    """Returns a formatted string with available presets."""
-    available_presets = "\n".join([f"  - {name}" for name in PRESETS.keys()])
-    return f"Presets disponibles:\n{available_presets}"
-
-
-def validate_dimensions(width: int, height: int) -> bool:
-    """Valida que las dimensiones estén dentro de límites seguros."""
-    if width <= 0 or height <= 0:
-        print(f"Error: Las dimensiones deben ser mayores a 0 (recibido: {width}x{height}).")
-        return False
-    if width > MAX_DIMENSION or height > MAX_DIMENSION:
-        print(f"Error: Las dimensiones exceden el límite máximo de {MAX_DIMENSION}px.")
-        return False
-    if width * height > MAX_PIXELS:
-        print(f"Error: El total de píxeles ({width * height:,}) excede el límite de {MAX_PIXELS:,}.")
-        return False
-    return True
-
 
 def validate_input_file(path: str) -> bool:
     """Valida que el archivo de entrada exista y sea legible."""
@@ -74,13 +36,9 @@ def validate_output_path(path: str) -> bool:
     return True
 
 
-def validate_aspect_ratio(ratio_w: int, ratio_h: int) -> bool:
-    """Valida que los valores de proporción sean válidos."""
-    if ratio_w <= 0 or ratio_h <= 0:
-        print("Error: Los valores de proporción deben ser mayores a 0.")
-        return False
-    return True
-
+# ==============================================================================
+# Funciones de lógica de imagen
+# ==============================================================================
 
 def resize_image(args):
     """Logic for the resize command."""
@@ -108,7 +66,9 @@ def resize_image(args):
                     target_height = int(target_width * ratio_h / ratio_w)
                     target_size = (target_width, target_height)
 
-                if not validate_dimensions(target_size[0], target_size[1]):
+                valid, error_msg = validate_dimensions(target_size[0], target_size[1])
+                if not valid:
+                    print(f"Error: {error_msg}")
                     return
 
                 print(f"Aplicando preset '{args.preset}' con tamaño final {target_size}...")
@@ -116,14 +76,18 @@ def resize_image(args):
 
             elif args.size:
                 target_size = tuple(args.size)
-                if not validate_dimensions(target_size[0], target_size[1]):
+                valid, error_msg = validate_dimensions(target_size[0], target_size[1])
+                if not valid:
+                    print(f"Error: {error_msg}")
                     return
                 print(f"Redimensionando a tamaño fijo {target_size} (puede distorsionar)...")
                 output_img = img.resize(target_size, Image.Resampling.LANCZOS)
 
             elif args.aspect_ratio:
                 target_w_ratio, target_h_ratio = args.aspect_ratio
-                if not validate_aspect_ratio(target_w_ratio, target_h_ratio):
+                valid, error_msg = validate_aspect_ratio(target_w_ratio, target_h_ratio)
+                if not valid:
+                    print(f"Error: {error_msg}")
                     return
 
                 print(f"Ajustando a proporción {target_w_ratio}:{target_h_ratio}...")
@@ -138,7 +102,9 @@ def resize_image(args):
                     final_w = int(final_h * target_ratio)
 
                 target_size = (final_w, final_h)
-                if not validate_dimensions(target_size[0], target_size[1]):
+                valid, error_msg = validate_dimensions(target_size[0], target_size[1])
+                if not valid:
+                    print(f"Error: {error_msg}")
                     return
                 output_img = ImageOps.fit(img, target_size, Image.Resampling.LANCZOS, centering=(0.5, 0.5))
 
@@ -198,7 +164,9 @@ def tile_image(args):
         return
 
     # Validar dimensiones del mosaico final
-    if not validate_dimensions(args.final_width, args.final_height):
+    valid, error_msg = validate_dimensions(args.final_width, args.final_height)
+    if not valid:
+        print(f"Error: {error_msg}")
         return
 
     try:
