@@ -5,6 +5,6 @@ body, html {
     background-color: #000;
 }
 
-#matrixCanvas {
+#matrix-canvas {
     display: block;
 }

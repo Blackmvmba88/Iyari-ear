@@ -1,14 +1,101 @@
-# 🎤 Iyari-ear
+# 🎤 Iyari-ear v1.0
 
-> **Subtítulos en tiempo real para que nadie se quede fuera de la conversación.**
+> **"Para que nadie quede fuera de la conversación"**
+> 
+> *Un puente de empatía técnica*
 
-*Creado con cariño para una amiga.*
+**Subtítulos en tiempo real para conversaciones cara a cara.**  
+**Sistema de diagnóstico electrónico real para reparación profesional.**
 
-**Ahora disponible como aplicación multiplataforma** 🚀
+*Creado con cariño para una amiga. Compartido con amor para el mundo.*
 
+[![Version](https://img.shields.io/badge/version-1.0.0-blue)]()
 [![Platform Support](https://img.shields.io/badge/platforms-Windows%20%7C%20Linux%20%7C%20macOS%20%7C%20Android-blue)]()
 [![PWA Ready](https://img.shields.io/badge/PWA-Ready-green)]()
 [![Python](https://img.shields.io/badge/python-3.7+-blue)]()
+
+📖 **[Leer el Manifiesto](./MANIFIESTO.md)** | 🏗️ **[Arquitectura](./ARCHITECTURE.md)** | 🌐 **[API Reference](./API.md)** | 🤝 **[Contribuir](./CONTRIBUTING.md)**
+
+---
+
+<div align="center">
+
+### 📰 Release v1.0 en 1 párrafo
+
+*Iyari-ear v1.0 es un puente de empatía técnica: subtítulos en tiempo real para que nadie quede fuera de la conversación, y diagnóstico electrónico causal para técnicos de reparación. Sin grabar. Sin vigilar. Sin métricas. Creado con cariño para una amiga. Compartido con amor para el mundo. No nació del capitalismo ni del mercado — nació de la ternura, que es una fuerza infraestimada en la ingeniería.*
+
+</div>
+
+---
+
+## 🎉 ¡Bienvenido a Iyari-ear v1.0!
+
+**Esta es la primera coronación oficial del proyecto.**
+
+Iyari-ear deja de ser "solo código" y se convierte en **obra con alma**.
+
+### ¿Qué es Iyari-ear?
+
+Un **puente de empatía técnica** que permite a dos personas entenderse sin repetir tres veces la misma frase.
+
+- 🎤 **Subtítulos en tiempo real** para conversaciones cara a cara
+- 🔧 **Diagnóstico electrónico real** con razonamiento causal
+- 💝 **Diseñado con empatía**, no con métricas
+- 🔒 **No graba, no guarda, no vigila** (por diseño)
+
+### Los Tres Elementos de la Coronación
+
+1. ✨ **El Manifiesto**: [MANIFIESTO.md](./MANIFIESTO.md) - Para quién existe, qué dolor repara, qué belleza crea
+2. 🎬 **La Demo Pública**: [GUIA_DEMO.md](./GUIA_DEMO.md) - Cómo crear y compartir tu demo de 30 segundos
+3. 🚀 **El Release Oficial**: [RELEASE_NOTES_v1.0.md](./RELEASE_NOTES_v1.0.md) - v1.0 "Para que nadie quede fuera de la conversación"
+
+---
+
+## 🌅 Visión 2.0 — El Siguiente Nivel
+
+**La versión 1.0 corona el puente. La versión 2.0 abre el tránsito.**
+
+### 📚 Documentación de Identidad Visual y Diseño
+
+- 🎨 **[Sistema de Color](./docs/COLOR_IDENTITY.md)** — Paleta tripartita: Empatía / Técnica / Institucional
+- 📝 **[Guía Tipográfica](./docs/TYPOGRAPHY_GUIDE.md)** — Jerarquía visual y respiración cognitiva
+- 🎭 **[Posters Narrativos](./docs/NARRATIVE_POSTERS.md)** — 5 posters conceptuales en ASCII art
+- 📐 **[Biblioteca Visual](./docs/VISUAL_LIBRARY.md)** — Catálogo completo de assets y guidelines
+
+### 🎯 Pitch para Diferentes Audiencias
+
+- 🏥 **[Medical Pitch](./docs/PITCH_VARIANTS.md#-medical-pitch)** — Para profesionales de salud
+- 🔧 **[Repair Pitch](./docs/PITCH_VARIANTS.md#-repair-pitch)** — Para técnicos electrónicos
+- ♿ **[Accessibility Pitch](./docs/PITCH_VARIANTS.md#-accessibility-pitch)** — Para comunidad de accesibilidad
+- 🎓 **[Education Pitch](./docs/PITCH_VARIANTS.md#-education-pitch)** — Para instituciones educativas
+- 💻 **[Open Source Pitch](./docs/PITCH_VARIANTS.md#-open-source-pitch)** — Para desarrolladores
+- 🌿 **[Ethical Tech Pitch](./docs/PITCH_VARIANTS.md#-ethical-tech-pitch)** — Para inversionistas éticos
+
+### ⚡ Roadmap Técnico
+
+- 🚀 **[Visión 2026-2027](./docs/VISION_2026_2027.md)** — Roadmap completo del ecosistema
+- ⚙️ **[Mejoras de Desempeño](./docs/PERFORMANCE_ROADMAP.md)** — Streaming, modelos locales, robustez ética
+- 🌐 **[Landing Page](./docs/LANDING_PAGE.md)** — Estructura narrativa para web pública
+
+> 💡 **Nota**: Esta documentación representa la visión 2.0 del proyecto. Algunas características están en desarrollo o planeadas para implementación futura.
+
+---
+
+## ✨ Características Principales
+
+### 🎤 Sistema de Subtítulos en Tiempo Real
+- Transcripción en vivo para apoyo auditivo
+- Soporte para español e inglés
+- Modo PWA instalable
+- Interfaz accesible y colorida
+
+### 🔧 Sistema de Diagnóstico Electrónico (NUEVO)
+- **3 Capas de Diagnóstico**: Localización → Causa → Consecuencia
+- **Estilos de diagnóstico**: Técnico, Ingeniero, Forense
+- **Multi-shot**: Soporte para múltiples fotos por sesión
+- **Modo asíncrono**: "Foto → Procesa → Diagnóstico"
+- **Reportes completos**: Evidencia + diagnóstico + próximos pasos
+- **Sistema Rail-first**: Análisis de voltajes y topología
 
 ---
 
@@ -89,15 +176,161 @@ iyari-ear start
 pip install -r requirements.txt
 python main.py
 
-# Visita: http://localhost:8000
-# Presiona "Iniciar" → Habla → Ve el texto
+# Acceder a las aplicaciones:
+# - Subtítulos: http://localhost:8000
+# - Diagnóstico Electrónico: http://localhost:8000/diagnostic
+# - Optimizador de Subtítulos: http://localhost:8000/subtitle-optimizer
 ```
 
 **💡 Nuevo:** Instala como PWA para acceso rápido desde tu menú de apps
 
 ---
 
+## 🔧 Sistema de Diagnóstico Electrónico Real
+
+### ¿Qué es esto?
+
+Un sistema profesional de diagnóstico de placas electrónicas que piensa como un técnico de verdad.
+
+**No es solo reconocimiento visual** — es **razonamiento causal**.
+
+### 📸 Interfaz del Sistema
+
+![Dashboard de Diagnóstico](docs/assets/diagnostic/01-initial-dashboard.png)
+
+*Dashboard profesional con modo oscuro, drag & drop, y análisis en tiempo real*
+
+### El Flujo (Modo Asíncrono)
+
+```
+📸 Foto → Sueltas la placa → 🧠 App procesa → 📋 Diagnóstico completo
+```
+
+Este flujo te permite:
+- ✔ Usar ambas manos para trabajar
+- ✔ Usar soldador / aire caliente
+- ✔ Tomar mediciones
+- ✔ Comparar con otras placas
+- ✔ Generar reportes profesionales
+
+### Las 3 Capas de Diagnóstico
+
+<table>
+<tr>
+<td width="33%">
+
+#### 📍 Capa 1: Localización
+**¿Dónde está la falla?**
+- Topología de la placa
+- Bloque funcional
+- Rail de voltaje
+- Componente específico
+
+</td>
+<td width="33%">
+
+#### 🔍 Capa 2: Causa
+**¿Por qué existe la falla?**
+- Análisis de causa raíz
+- Evidencia recopilada
+- Razonamiento técnico
+- Pruebas sugeridas
+
+</td>
+<td width="33%">
+
+#### ⚡ Capa 3: Consecuencia
+**¿Qué rompe funcionalmente?**
+- Impacto en el sistema
+- Funciones afectadas
+- Efectos en cascada
+- Nivel de criticidad
+
+</td>
+</tr>
+</table>
+
+### 🎭 Tres Estilos de Diagnóstico
+
+| Estilo | Perfil | Ejemplo |
+|--------|--------|---------|
+| **🔧 Técnico** | Directo y práctico | "3V3 ausente → Regulador falló. Medir salida, revisar entrada 5V." |
+| **⚙️ Ingeniero** | Causal y metodológico | "El rail 3V3 es generado por un LDO (AMS1117). Causas posibles: (1) Regulador dañado, (2) Entrada 5V insuficiente, (3) Caps en corto..." |
+| **🔬 Forense** | Exhaustivo y detallado | "Análisis completo: VBUS → Fusible → 5V → U1 → 3V3. Escenarios ordenados por probabilidad: (1) Falla térmica 60%, (2) Corto downstream 25%..." |
+
+📖 [Ver ejemplos completos de cada estilo](docs/DIAGNOSTIC_STYLES.md)
+
+### ▶️ Demo Rápido
+
+**Prueba el sistema sin hardware:**
+
+1. Abre http://localhost:8000/diagnostic
+2. Click en **"▶️ Run Demo (ESP32 3V3 failure)"**
+3. Observa el análisis en tiempo real
+4. Revisa el diagnóstico completo
+
+⏱️ Tiempo: 60 segundos
+
+### Ejemplo de Diagnóstico Real
+
+```
+📸 Foto de placa → App procesa
+
+✔ Identificando rails...
+✔ 3V3 encontrado
+✔ USB 5V encontrado
+✔ Región RF detectada
+✔ Posible regulador AMS1117
+✔ Hipótesis: 3V3 ausente
+
+📋 RESULTADO:
+  🎯 Capa 1: Rail 3V3, Regulador U1
+  🔍 Capa 2: Sin voltaje - Regulador falló
+  ⚡ Capa 3: CRÍTICO - Radio no enciende, placa no arranca
+  
+  🔧 Próximos pasos:
+     • Medir voltaje en TP3
+     • Verificar continuidad desde fuente
+     • Revisar AMS1117
+     
+  📊 Puntos de prueba: TP3, TP_3V3, Salida U1
+```
+
+### Uso Rápido
+
+```bash
+# Accede a la interfaz
+http://localhost:8000/diagnostic
+
+# 1. Crear sesión → Ingresa modelo de placa
+# 2. Seleccionar estilo (Técnico/Ingeniero/Forense)
+# 3. Subir fotos (frontal, backside, microscope, etc.)
+# 4. Presionar "Analizar"
+# 5. Recibir diagnóstico en tiempo real
+# 6. Exportar reporte (JSON/TXT)
+```
+
+### Características Avanzadas
+
+- **Multi-shot**: Sube 3-5 fotos de diferentes ángulos
+- **Sesiones persistentes**: Historial de diagnósticos
+- **Comparación A/B**: Compara con "Golden Board"
+- **Análisis Rail-first**: VCC → Regulación → MCU → IO
+- **Modo Ticket**: Saca fotos → App procesa → Devuelve diagnóstico
+
+### Casos de Uso
+
+1. **Taller de reparación**: Diagnóstico rápido antes de cotizar
+2. **Soporte remoto**: Cliente envía fotos → Tú das diagnóstico
+3. **Documentación**: Genera reportes con evidencia
+4. **Capacitación**: Aprende patrones de fallas comunes
+5. **Auditoría**: Historial de reparaciones y decisiones
+
+---
+
 ## ¿Qué es esto? 💡
+
+### Sistema de Subtítulos
 
 Una **aplicación multiplataforma** para generar subtítulos en tiempo real. Captura audio desde el micrófono del navegador, lo envía a un servidor backend que lo transcribe a texto, y muestra los subtítulos en la pantalla.
 
@@ -173,6 +406,32 @@ La conversación aparece como subtítulos grandes y claros:
 La tecnología desaparece.
 Solo queda la conversación.
 
+---
+
+## 🌟 Casos Reales
+
+**No métricas. No KPIs. Historias pequeñas de humanos.**
+
+### Abuela — mesa familiar — subtítulos → sonrisa
+
+Una tablet en la mesa. Palabras que aparecen. Una abuela que vuelve a participar en la conversación familiar. No necesitó preguntar "¿qué dijiste?" ni una sola vez.
+
+### Técnico — ESP32 — rail 3V3 → diagnóstico en 60 segundos
+
+Un técnico saca foto del ESP32 sin voltaje. La app identifica: "Rail 3V3 ausente → Regulador AMS1117". Mide. Confirma. Repara. Todo en 60 segundos.
+
+### Consulta médica
+
+Un paciente con dificultad auditiva. Un doctor que habla normalmente. Un celular que traduce voz a texto en tiempo real. La conversación fluye. Sin repeticiones. Sin malentendidos.
+
+### Cliente remoto manda foto → diagnóstico asíncrono
+
+Un cliente en otro país envía foto de una placa. El técnico la analiza con Iyari-ear. Devuelve diagnóstico completo: ubicación de falla, causa raíz, próximos pasos. Todo sin estar físicamente presente.
+
+---
+
+**Estos casos legitiman el propósito más que cualquier paper.**
+
 ## Por qué existe esto ❤️
 
 **"Creado con cariño para una amiga."**
@@ -184,6 +443,37 @@ Iyari-ear no es un producto. Es una herramienta de empatía.
 - Mostrar palabras, no juzgar voces.
 
 La tecnología al servicio de la conexión humana.
+
+### 🛠️ Mini Manifiesto Técnico
+
+**Para los ingenieros — desde la belleza:**
+
+- **Privacidad por diseño**: El audio se transcribe y desaparece. Sin logs. Sin bases de datos. Sin historiales.
+- **Diagnóstico causal, no visual**: El sistema razona sobre topología y flujo de energía, no solo reconoce componentes.
+- **Subtítulos para conexión humana, no registro**: Las palabras aparecen para ser leídas, no para ser guardadas.
+- **Cero métricas. Cero vigilancia. Cero gamificación**: No medimos engagement, retención ni conversiones. Medimos si ayuda.
+
+*Este es oro para cualquier tecnólogo ético.*
+
+### Historia de Origen 📖
+
+Este proyecto nació de ver a alguien que amas esforzarse para entender una conversación.
+
+No de un análisis de mercado.  
+No de una oportunidad de negocio.  
+No de métricas o KPIs.
+
+**Nació del deseo de que alguien especial no se quedara fuera de la conversación.**
+
+En purépecha, **Iyari** significa "corazón" o "alma".  
+Este proyecto tiene alma porque nació del corazón.
+
+Cada línea de código fue escrita con una pregunta en mente:  
+*"¿Esto ayuda a conectar o complica la vida?"*
+
+Y esa pregunta sigue guiando cada decisión técnica.
+
+Lee la historia completa en el **[Manifiesto](./MANIFIESTO.md)**.
 
 ## Flujo de la Aplicación 🔄
 
@@ -326,3 +616,161 @@ sudo apt-get update && sudo apt-get install -y portaudio19-dev
 ```
 
 Después de instalarlo, vuelve a ejecutar `pip install -r requirements.txt`.
+
+---
+
+## 🎬 Comparte Tu Demo
+
+**"El universo ama las demostraciones."**
+
+Si Iyari-ear te ayuda (o a alguien que conoces), nos encantaría verlo en acción.
+
+### Cómo Crear Tu Demo de 30 Segundos
+
+1. 📱 Graba la app funcionando (con celular o cámara)
+2. 🗣️ Muestra subtítulos apareciendo en tiempo real
+3. ✂️ Edita a 30 segundos
+4. 📤 Comparte en redes o GitHub
+
+**Guía completa**: [GUIA_DEMO.md](./GUIA_DEMO.md)
+
+### Dónde Compartir
+
+- **GitHub**: Abre un Issue con tu demo/historia
+- **Twitter/X**: Usa #IyariEar #Accesibilidad
+- **LinkedIn**: Comparte tu caso de uso
+- **YouTube**: Video completo con descripción
+
+### Historias Reales
+
+Usa la plantilla: [ISSUE_TEMPLATE_HISTORIAS_REALES.md](./ISSUE_TEMPLATE_HISTORIAS_REALES.md)
+
+**No necesitamos métricas. Necesitamos historias humanas.**
+
+---
+
+## 🤝 Contribuir
+
+Este proyecto vive de la comunidad.
+
+### Formas de Contribuir
+
+- 💻 **Código**: Mejoras, features, fixes
+- 📖 **Documentación**: Traducciones, guías, ejemplos
+- 🐛 **Reporte de bugs**: Con contexto y pasos para reproducir
+- 💡 **Ideas**: Sugerencias que ayuden a conectar personas
+- 🎬 **Demos**: Muestra la app en acción
+- ❤️ **Historias**: Comparte cómo te ayudó → [TESTIMONIOS.md](./TESTIMONIOS.md)
+
+### Guía Completa de Contribución
+
+Lee la **[Guía de Contribución](./CONTRIBUTING.md)** para:
+- Estilo técnico (Python, JavaScript, HTML/CSS)
+- Decisiones prohibidas (grabación, analytics, gamificación)
+- Estilo de comunicación (PRs, issues)
+- Configuración del entorno de desarrollo
+- Proceso de code review
+
+### Inicio Rápido
+
+```bash
+# Fork el repositorio
+git clone https://github.com/TU_USUARIO/Iyari-ear.git
+
+# Crea una rama
+git checkout -b feature/mi-mejora
+
+# Instala dependencias
+pip install -r requirements.txt
+
+# Haz tus cambios, commit y push
+git push origin feature/mi-mejora
+
+# Abre un Pull Request
+```
+
+**Recuerda**: Cada decisión debe responder:  
+*"¿Esto ayuda a conectar o complica la vida?"*
+
+### Arquitectura y APIs
+
+- **[Arquitectura Técnica](./ARCHITECTURE.md)** - Diagramas y estructura del sistema
+- **[API Reference](./API.md)** - Documentación completa de REST y WebSocket APIs
+
+---
+
+## 📜 Licencia
+
+Este proyecto está diseñado para ser usado, modificado y compartido libremente.
+
+**Única condición**: Mantén el espíritu de empatía y privacidad.
+
+---
+
+## 🌐 Enlaces Importantes
+
+### 📚 Documentación Técnica
+
+- 🏗️ **[Arquitectura Técnica](./ARCHITECTURE.md)** - Cómo funciona el sistema
+- 🌐 **[API Reference](./API.md)** - REST y WebSocket APIs documentadas
+- 🤝 **[Guía de Contribución](./CONTRIBUTING.md)** - Estilo técnico y humano
+- 📊 **[Impacto Técnico](./IMPACT.md)** - Métricas y valor cuantificado
+
+### 💝 Filosofía y Comunidad
+
+- 💝 **[Manifiesto](./MANIFIESTO.md)** - El alma del proyecto
+- 💬 **[Testimonios](./TESTIMONIOS.md)** - Historias reales de impacto humano
+- 🎬 **[Guía de Demo](./GUIA_DEMO.md)** - Crea tu demo de 30 segundos
+- 📖 **[Identidad del Repo](./GUIA_IDENTIDAD_REPO.md)** - Convenciones y estilo
+
+### 🚀 Releases
+
+- 🚀 **[Release v1.0](./RELEASE_NOTES_v1.0.md)** - Notas de la primera coronación
+- ⚡ **[Inicio Rápido](./INICIO_RAPIDO.md)** - Empieza en 60 segundos
+
+---
+
+## 🌅 Dónde va esto después
+
+**En 2026, Iyari-ear demuestra que el puente existe.**  
+**En 2027 queremos que más personas lo crucen.**
+
+No hay roadmap con fechas.  
+No hay promesas grandilocuentes.  
+Solo una dirección:
+
+- Más idiomas, más contextos, más personas conectadas.
+- Diagnóstico que aprende de cada técnico que lo usa.
+- Comunidad de personas que construyen empatía técnica.
+
+El futuro le da respiración al presente.  
+La ciencia y el arte siempre piden horizonte 🌅
+
+---
+
+<div align="center">
+
+## 💝 La Coronación
+
+**Iyari-ear v1.0 — "Para que nadie quede fuera de la conversación"**
+
+*Un puente de empatía técnica*
+
+**Creado con cariño para una amiga.**  
+**Compartido con amor para el mundo.**
+
+✨ Enero 2025 ✨
+
+---
+
+*"Este proyecto no necesita empujones. Necesita testigos."*
+
+*"La mejor coronación es humana + mínima + real."*
+
+---
+
+⭐ Si este proyecto te ayuda, dale una estrella en GitHub  
+🎬 Comparte tu demo  
+❤️ Cuéntanos tu historia
+
+</div>

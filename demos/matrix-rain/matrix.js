@@ -273,7 +273,7 @@ const resetToDefaults = () => {
     audioVizToggle.checked = false;
     fontSizeSlider.value = 16;
     speedSlider.value = 30;
-    densitySlider.value = 0.975;
+    densitySlider.value = 0.015;
     document.querySelector('input[name="char-set"][value="katakana"]').checked = true;
 
     // Reset internal state
