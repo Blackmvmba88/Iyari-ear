@@ -132,7 +132,7 @@ iyari-ear start       # Inicia servidor
 - **Android (Termux)**: [Guía de instalación](docs/PLATFORMS.md#-android)
 - **macOS**: [Homebrew setup](docs/PLATFORMS.md#-macos)
 
-📖 **[Guía completa de instalación](docs/INSTALLATION.md)** | **[Matriz de compatibilidad](docs/PLATFORMS.md)**
+📖 **[Guía completa de instalación](docs/INSTALLATION.md)** | **[Matriz de compatibilidad](docs/PLATFORMS.md)** | **[🗺️ Roadmap del Proyecto](docs/ROADMAP.md)**
 
 ---
 
