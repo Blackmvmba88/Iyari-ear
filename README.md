@@ -125,6 +125,19 @@ iyari-ear test-mic    # Prueba micrófono
 iyari-ear start       # Inicia servidor
 ```
 
+### Opción 3: App de escritorio para crop 3000x3000
+
+```bash
+python square_3000_app.py
+```
+
+Flujo:
+- Abres una imagen
+- Eliges salida
+- Clic en `Generar 3000x3000`
+
+La app recorta al centro y exporta una imagen cuadrada exacta de `3000x3000`.
+
 ### Opción 3: Ver guías específicas por plataforma
 
 - **Windows**: [Ejecutable .exe](docs/PLATFORMS.md#-windows)
